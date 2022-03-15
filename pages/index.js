@@ -15,8 +15,8 @@ export default function Index() {
 	const [originalWords, setOriginalWords] = useState([]);
 	const [units, setUnits] = useState([]);
 	const [activeUnit, setActiveUnit] = useState([]);
-  const [primary, setPrimary] = useState("en");
-  const [showGlobal, setShowGlobal] = useState(false);
+	const [primary, setPrimary] = useState("en");
+	const [showGlobal, setShowGlobal] = useState(false);
 
 	const deleteWord = (id) => {
 		axios
