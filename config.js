@@ -1,1 +1,1 @@
-export const PATH = 'https://api.nubestech.cz/';
+export const PATH = process.env.NEXT_PUBLIC_API_URL;
