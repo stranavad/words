@@ -10,8 +10,9 @@ import { Stack, Fab, Box } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import fileDownload from "js-file-download";
 import { PATH } from "../config";
+import AlertBar from "../components/AlertBar";
 
-export default function Index() {
+export default function Index({ alert }) {
 	const [words, setWords] = useState([]);
 	const [originalWords, setOriginalWords] = useState([]);
 	const [units, setUnits] = useState([]);
@@ -46,8 +47,11 @@ export default function Index() {
 	const copyToClipboard = () => {
 		axios
 			.post(`${PATH}words/export`, { units: activeUnit })
-			.then(({ data }) => navigator.clipboard.writeText(data));
-  };
+			.then(({ data }) => {
+				navigator.clipboard.writeText(data);
+				alert("Zkopirovano do clipboard", "success");
+			});
+	};
 
 	const exportWords = () => {
 		axios
@@ -103,7 +107,7 @@ export default function Index() {
 	}, [activeUnit, originalWords]);
 
 	return (
-		<Stack alignItems="center">
+		<>
 			<Stack
 				direction="row"
 				alignItems="center"
@@ -134,6 +138,6 @@ export default function Index() {
 					</Fab>
 				</Link>
 			</Box>
-		</Stack>
+		</>
 	);
 }
