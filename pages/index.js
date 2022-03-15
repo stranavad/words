@@ -43,6 +43,12 @@ export default function Index() {
 		});
 	};
 
+	const copyToClipboard = () => {
+		axios
+			.post(`${PATH}words/export`, { units: activeUnit })
+			.then(({ data }) => navigator.clipboard.writeText(data));
+  };
+
 	const exportWords = () => {
 		axios
 			.post(`${PATH}words/export`, { units: activeUnit })
@@ -113,6 +119,7 @@ export default function Index() {
 			<AdvancedMenu
 				showGlobal={showGlobal}
 				setShowGlobal={setShowGlobal}
+				copyToClipboard={copyToClipboard}
 				exportWords={exportWords}
 			/>
 			<WordsList
