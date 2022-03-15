@@ -5,39 +5,57 @@ import axios from "axios";
 import UnitSelect from "../components/UnitSelect";
 import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
-import { Stack, Fab, Box } from "@mui/material";
+import AdvancedMenu from "../components/AdvancedMenu";
+import { Stack, Fab, Box, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import fileDownload from "js-file-download";
 import { PATH } from "../config";
 
-export default function Index() {
+export default function Index({ alert }) {
 	const [words, setWords] = useState([]);
 	const [originalWords, setOriginalWords] = useState([]);
 	const [units, setUnits] = useState([]);
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [primary, setPrimary] = useState("en");
+	const [showGlobal, setShowGlobal] = useState(false);
 
 	const deleteWord = (id) => {
 		axios
 			.delete(`${PATH}words`, { params: { id } })
-      .then((res) => console.log(res));
-    axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
-		setOriginalWords(
-			data.map((word) => ({
-				...word,
-				show: true,
-				primary: word.en,
-				secondary: word.cz,
-			}))
-		);
-		setWords(
-			data.map((word) => ({
-				...word,
-				show: true,
-				primary: word.en,
-				secondary: word.cz,
-			}))
-		);
-	});
+			.then((res) => console.log(res));
+		axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
+			setOriginalWords(
+				data.map((word) => ({
+					...word,
+					show: true,
+					primary: word.en,
+					secondary: word.cz,
+				}))
+			);
+			setWords(
+				data.map((word) => ({
+					...word,
+					show: true,
+					primary: word.en,
+					secondary: word.cz,
+				}))
+			);
+		});
+	};
+
+	const copyToClipboard = () => {
+		axios
+			.post(`${PATH}words/export`, { units: activeUnit })
+			.then(({ data }) => {
+				navigator.clipboard.writeText(data);
+				alert("Zkopirovano do clipboard", "success");
+			});
+	};
+
+	const exportWords = () => {
+		axios
+			.post(`${PATH}words/export`, { units: activeUnit })
+			.then(({ data }) => fileDownload(data, "words.txt"));
 	};
 
 	// get initial data
@@ -88,7 +106,7 @@ export default function Index() {
 	}, [activeUnit, originalWords]);
 
 	return (
-		<Stack alignItems="center">
+		<>
 			<Stack
 				direction="row"
 				alignItems="center"
@@ -101,7 +119,17 @@ export default function Index() {
 				/>
 				<TogglePrimary primary={primary} setPrimary={setPrimary} />
 			</Stack>
-			<WordsList words={words} deleteWord={deleteWord} />
+			<AdvancedMenu
+				showGlobal={showGlobal}
+				setShowGlobal={setShowGlobal}
+				copyToClipboard={copyToClipboard}
+				exportWords={exportWords}
+			/>
+			<WordsList
+				words={words}
+				deleteWord={deleteWord}
+				showGlobal={showGlobal}
+			/>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
@@ -109,7 +137,6 @@ export default function Index() {
 					</Fab>
 				</Link>
 			</Box>
-		</Stack>
+		</>
 	);
-};
-
+}

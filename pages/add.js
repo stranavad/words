@@ -7,7 +7,7 @@ import AddWord from "../components/AddWord";
 import AddUnit from "../components/AddUnit";
 import { PATH } from "../config";
 
-const Add = () => {
+const Add = ({ alert }) => {
 	const [words, setWords] = useState([]);
 	const [units, setUnits] = useState([]);
 
@@ -22,15 +22,17 @@ const Add = () => {
 	}, []);
 
 	const addWord = (word) => {
-        axios.post(`${PATH}words`, word).then(() => {
-            axios
+		axios.post(`${PATH}words`, word).then(() => {
+			alert("Vytvoreno nove slovo", "success");
+			axios
 				.get(`${PATH}words`)
 				.then(({ data: { words: data } }) => setWords(data));
-        });
+		});
 	};
 	const addUnit = (unit) => {
 		console.log("adding unit");
 		axios.post(`${PATH}units`, { unit }).then(() => {
+			 alert("Vytvorena nova lekce", "success");
 			axios
 				.get(`${PATH}units`)
 				.then(({ data: { units: data } }) => setUnits(data));
@@ -38,7 +40,7 @@ const Add = () => {
 	};
 
 	return (
-		<Stack alignItems="center">
+		<>
 			<Stack sx={{ maxWidth: 400, width: "100%" }}>
 				<Stack
 					sx={{
@@ -60,7 +62,7 @@ const Add = () => {
 				/>
 				<AddUnit units={units.map((u) => u.name)} addUnit={addUnit} />
 			</Stack>
-		</Stack>
+		</>
 	);
 };
 
