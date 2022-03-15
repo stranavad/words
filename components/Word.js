@@ -1,10 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { ListItem, ListItemText, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const Word = ({ word, deleteWord }) => {
-	const [show, setShow] = useState(true);
+const Word = ({ word, deleteWord, showGlobal }) => {
+	const [show, setShow] = useState(false);
 	const hashedWord = word.secondary?.split("").map(() => "*");
+	useEffect(() => setShow(showGlobal), [showGlobal]);
 	return (
 		<ListItem
 			key={word.id}
@@ -16,11 +17,11 @@ const Word = ({ word, deleteWord }) => {
 					{show ? <VisibilityOff /> : <Visibility />}
 				</IconButton>
 			}
-            sx={{ width: "100%" }}
-            onDoubleClick={() => deleteWord(word.id)}
+			sx={{ width: "100%" }}
+			onDoubleClick={() => deleteWord(word.id)}
 		>
 			<ListItemText
-                primary={word.primary}
+				primary={word.primary}
 				secondary={show ? word.secondary : hashedWord}
 			/>
 		</ListItem>

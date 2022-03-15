@@ -5,7 +5,8 @@ import axios from "axios";
 import UnitSelect from "../components/UnitSelect";
 import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
-import { Stack, Fab, Box } from "@mui/material";
+import AdvancedMenu from '../components/AdvancedMenu';
+import { Stack, Fab, Box, Divider } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { PATH } from "../config";
 
@@ -14,7 +15,8 @@ export default function Index() {
 	const [originalWords, setOriginalWords] = useState([]);
 	const [units, setUnits] = useState([]);
 	const [activeUnit, setActiveUnit] = useState([]);
-	const [primary, setPrimary] = useState("en");
+  const [primary, setPrimary] = useState("en");
+  const [showGlobal, setShowGlobal] = useState(false);
 
 	const deleteWord = (id) => {
 		axios
@@ -100,8 +102,9 @@ export default function Index() {
 					setActiveUnit={setActiveUnit}
 				/>
 				<TogglePrimary primary={primary} setPrimary={setPrimary} />
-			</Stack>
-			<WordsList words={words} deleteWord={deleteWord} />
+      </Stack>
+      <AdvancedMenu showGlobal={showGlobal} setShowGlobal={setShowGlobal}/>
+      <WordsList words={words} deleteWord={deleteWord} showGlobal={showGlobal}/>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
