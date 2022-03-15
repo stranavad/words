@@ -12,7 +12,7 @@ const AlertBar = ({ show, setShow, text, severity }) => {
 			}}
 		>
 			{show && (
-				<Slide direction="up" in={show}>
+				<Slide direction="down" in={show}>
 					<Alert
 						severity={severity}
 						onClose={() => setShow(false)}
