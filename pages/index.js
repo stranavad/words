@@ -6,8 +6,9 @@ import UnitSelect from "../components/UnitSelect";
 import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
-import { Stack, Fab, Box, Divider } from "@mui/material";
+import { Stack, Fab, Box } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import fileDownload from "js-file-download";
 import { PATH } from "../config";
 
 export default function Index() {
@@ -46,6 +47,12 @@ export default function Index() {
 		axios
 			.post(`${PATH}words/export`, { units: activeUnit })
 			.then(({ data }) => navigator.clipboard.writeText(data));
+  };
+
+	const exportWords = () => {
+		axios
+			.post(`${PATH}words/export`, { units: activeUnit })
+			.then(({ data }) => fileDownload(data, "words.txt"));
 	};
 
 	// get initial data
@@ -113,6 +120,7 @@ export default function Index() {
 				showGlobal={showGlobal}
 				setShowGlobal={setShowGlobal}
 				copyToClipboard={copyToClipboard}
+				exportWords={exportWords}
 			/>
 			<WordsList
 				words={words}
