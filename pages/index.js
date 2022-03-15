@@ -5,9 +5,10 @@ import axios from "axios";
 import UnitSelect from "../components/UnitSelect";
 import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
-import AdvancedMenu from '../components/AdvancedMenu';
-import { Stack, Fab, Box, Divider } from "@mui/material";
+import AdvancedMenu from "../components/AdvancedMenu";
+import { Stack, Fab, Box } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import fileDownload from "js-file-download";
 import { PATH } from "../config";
 
 export default function Index() {
@@ -15,31 +16,37 @@ export default function Index() {
 	const [originalWords, setOriginalWords] = useState([]);
 	const [units, setUnits] = useState([]);
 	const [activeUnit, setActiveUnit] = useState([]);
-  const [primary, setPrimary] = useState("en");
-  const [showGlobal, setShowGlobal] = useState(false);
+	const [primary, setPrimary] = useState("en");
+	const [showGlobal, setShowGlobal] = useState(false);
 
 	const deleteWord = (id) => {
 		axios
 			.delete(`${PATH}words`, { params: { id } })
-      .then((res) => console.log(res));
-    axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
-		setOriginalWords(
-			data.map((word) => ({
-				...word,
-				show: true,
-				primary: word.en,
-				secondary: word.cz,
-			}))
-		);
-		setWords(
-			data.map((word) => ({
-				...word,
-				show: true,
-				primary: word.en,
-				secondary: word.cz,
-			}))
-		);
-	});
+			.then((res) => console.log(res));
+		axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
+			setOriginalWords(
+				data.map((word) => ({
+					...word,
+					show: true,
+					primary: word.en,
+					secondary: word.cz,
+				}))
+			);
+			setWords(
+				data.map((word) => ({
+					...word,
+					show: true,
+					primary: word.en,
+					secondary: word.cz,
+				}))
+			);
+		});
+	};
+
+	const exportWords = () => {
+		axios
+			.post(`${PATH}words/export`, { units: activeUnit })
+			.then(({ data }) => fileDownload(data, "words.txt"));
 	};
 
 	// get initial data
@@ -102,9 +109,17 @@ export default function Index() {
 					setActiveUnit={setActiveUnit}
 				/>
 				<TogglePrimary primary={primary} setPrimary={setPrimary} />
-      </Stack>
-      <AdvancedMenu showGlobal={showGlobal} setShowGlobal={setShowGlobal}/>
-      <WordsList words={words} deleteWord={deleteWord} showGlobal={showGlobal}/>
+			</Stack>
+			<AdvancedMenu
+				showGlobal={showGlobal}
+				setShowGlobal={setShowGlobal}
+				exportWords={exportWords}
+			/>
+			<WordsList
+				words={words}
+				deleteWord={deleteWord}
+				showGlobal={showGlobal}
+			/>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
@@ -114,5 +129,4 @@ export default function Index() {
 			</Box>
 		</Stack>
 	);
-};
-
+}
