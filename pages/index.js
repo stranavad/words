@@ -6,11 +6,10 @@ import UnitSelect from "../components/UnitSelect";
 import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
-import { Stack, Fab, Box } from "@mui/material";
+import { Stack, Fab, Box, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import fileDownload from "js-file-download";
 import { PATH } from "../config";
-import AlertBar from "../components/AlertBar";
 
 export default function Index({ alert }) {
 	const [words, setWords] = useState([]);
