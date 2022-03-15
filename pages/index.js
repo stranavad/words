@@ -6,7 +6,7 @@ import UnitSelect from "../components/UnitSelect";
 import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
-import { Stack, Fab, Box, Button } from "@mui/material";
+import { Stack, Fab, Box, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import fileDownload from "js-file-download";
 import { PATH } from "../config";
@@ -18,6 +18,7 @@ export default function Index({ alert }) {
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [primary, setPrimary] = useState("en");
 	const [showGlobal, setShowGlobal] = useState(false);
+	const [dataLoaded, setDataLoaded] = useState(false);
 
 	const deleteWord = (id) => {
 		axios
@@ -77,6 +78,7 @@ export default function Index({ alert }) {
 					secondary: word.cz,
 				}))
 			);
+			setDataLoaded(true);
 		});
 		axios
 			.get(`${PATH}units`)
@@ -105,7 +107,7 @@ export default function Index({ alert }) {
 		}
 	}, [activeUnit, originalWords]);
 
-	return (
+	return dataLoaded ? (
 		<>
 			<Stack
 				direction="row"
@@ -127,6 +129,7 @@ export default function Index({ alert }) {
 			/>
 			<WordsList
 				words={words}
+				primary={primary}
 				deleteWord={deleteWord}
 				showGlobal={showGlobal}
 			/>
@@ -138,5 +141,7 @@ export default function Index({ alert }) {
 				</Link>
 			</Box>
 		</>
+	) : (
+		<CircularProgress />
 	);
 }
