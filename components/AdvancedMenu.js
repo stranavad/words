@@ -1,13 +1,8 @@
 import { Box, IconButton, Button } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from 'axios';
-import { PATH } from '../config';
-import fileDownload from "js-file-download";
-const AdvancedMenu = ({ showGlobal, setShowGlobal }) => {
-	const exportWords = () => {
-		axios.get(`${PATH}words/export`).then((res) => fileDownload(res.data, 'words.txt'));
-	}
 
+const AdvancedMenu = ({ showGlobal, setShowGlobal, exportWords }) => {
 	return (
 		<Box sx={{ width: "100%", maxWidth: 400 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', paddingRight: '16px', paddingLeft: '8px'}}>
