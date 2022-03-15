@@ -1,6 +1,7 @@
 import AlertBar from "../components/AlertBar";
 import { useState } from "react";
 import { Stack } from "@mui/material";
+import '../styles.css';
 
 const App = ({ Component, pageProps }) => {
 	const [alertText, setAlertText] = useState(false);
