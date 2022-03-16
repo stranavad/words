@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from 'next/link';
 import {
 	FormControl,
 	InputLabel,
@@ -7,12 +8,13 @@ import {
 	OutlinedInput,
 	Chip,
 	Box,
+	Button
 } from "@mui/material";
 
 const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 	const [open, setOpen] = useState(false);
 	return (
-		<FormControl sx={{ m: 1, width: '70%'}}>
+		<FormControl sx={{ m: 1, width: "70%" }}>
 			<InputLabel id="chip">Unit</InputLabel>
 			<Select
 				labelId="chip"
@@ -29,17 +31,22 @@ const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 				renderValue={(selected) => (
 					<Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
 						{selected.map((value) => (
-							<Chip key={value} label={value} color='primary' />
+							<Chip key={value} label={value} color="primary" />
 						))}
 					</Box>
 				)}
 				// MenuProps={MenuProps}
 			>
-				{units.map((name) => (
-					<MenuItem key={name} value={name}>
-						{name}
-					</MenuItem>
-				))}
+				<>
+					{units.map((name) => (
+						<MenuItem key={name} value={name}>
+							{name}
+						</MenuItem>
+					))}
+					<Link href='/units' passHref>
+						<Button>Units</Button>
+					</Link>
+				</>
 			</Select>
 		</FormControl>
 	);

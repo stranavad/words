@@ -1,15 +1,26 @@
 /* eslint-disable @next/next/link-passhref */
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import axios from "axios";
+// MUI
+import {
+	Stack,
+	Fab,
+	Box,
+	CircularProgress,
+	List,
+	Divider,
+} from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { PATH } from "../config";
+// custom components
 import UnitSelect from "../components/UnitSelect";
-import WordsList from "../components/Words";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
-import { Stack, Fab, Box, CircularProgress } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import Word from "../components/Word";
+// modules
+import axios from "axios";
+import { useSpeechSynthesis } from "react-speech-kit";
 import fileDownload from "js-file-download";
-import { PATH } from "../config";
 
 export default function Index({ alert }) {
 	const [words, setWords] = useState([]);
@@ -57,6 +68,13 @@ export default function Index({ alert }) {
 		axios
 			.post(`${PATH}words/export`, { units: activeUnit })
 			.then(({ data }) => fileDownload(data, "words.txt"));
+	};
+
+	// speaking
+	const { speak, speaking, cancel } = useSpeechSynthesis();
+	const speakWord = (text) => {
+		speaking && cancel();
+		speak({ text });
 	};
 
 	// get initial data
@@ -127,12 +145,21 @@ export default function Index({ alert }) {
 				copyToClipboard={copyToClipboard}
 				exportWords={exportWords}
 			/>
-			<WordsList
-				words={words}
-				primary={primary}
-				deleteWord={deleteWord}
-				showGlobal={showGlobal}
-			/>
+			<List sx={{ maxWidth: "400px", width: "100%" }}>
+				{words.map((word) => (
+					<>
+						<Word
+							key={word.id}
+							word={word}
+							deleteWord={deleteWord}
+							showGlobal={showGlobal}
+							speak={speakWord}
+							primary={primary}
+						/>
+						<Divider />
+					</>
+				))}
+			</List>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
