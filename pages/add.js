@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/link-passhref */
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
+// MUI
 import { Stack, Button } from "@mui/material";
+// Custom components
 import AddWord from "../components/AddWord";
 import AddUnit from "../components/AddUnit";
 import { PATH } from "../config";
+// Modules
+import axios from "axios";
 
 const Add = ({ alert }) => {
 	const [words, setWords] = useState([]);
