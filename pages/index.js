@@ -76,12 +76,30 @@ export default function Index({ alert }) {
 			.then(({ data }) => fileDownload(data, "words.txt"));
 	};
 
+	const shareLink = () => {
+		if (typeof window !== 'undefined') {
+			let query = new URLSearchParams();
+			activeUnit.forEach((u) => {
+				query.append('activeUnit', u)
+			})
+			navigator.clipboard.writeText(
+				window.location.href + "?" + query.toString()
+			);
+			alert('Odkaz zkopirovan do clipboard', 'success');
+		}
+	}
+
 	// speaking
 	const { speak, speaking, cancel } = useSpeechSynthesis();
 	const speakWord = (text) => {
 		speaking && cancel();
 		speak({ text });
 	};
+
+	// dataLoaded
+	useEffect(() => {
+		setDataLoaded(wordsLoaded && unitsLoaded);
+	}, [wordsLoaded, unitsLoaded])
 
 	// get initial data
 	useEffect(() => {
@@ -110,15 +128,10 @@ export default function Index({ alert }) {
 		});
 	}, []);
 
-	useEffect(() => {
-		if (wordsLoaded && unitsLoaded) {
-			setDataLoaded(true);
-		}
-	}, [wordsLoaded, unitsLoaded]);
-
 	// watch for query change
 	useEffect(() => {
-		if (query?.activeUnit) {
+		if (query?.activeUnit && unitsLoaded) {
+			console.log('there is query');
 			let active = Array.isArray(query.activeUnit)
 				? query.activeUnit
 				: [query.activeUnit];
@@ -126,9 +139,9 @@ export default function Index({ alert }) {
 				units.map((u) => u.name).includes(unit)
 			);
 			setActiveUnit(Array.from(new Set(active))); // removing duplicated
-			replace("/", undefined, { shallow: true });
+			replace('/', undefined, { shallow: true });
 		}
-	}, [query?.activeUnit, replace, dataLoaded, units]);
+	}, [query?.activeUnit, replace, dataLoaded, units, unitsLoaded]);
 
 	// change Primary language
 	useEffect(() => {
@@ -170,6 +183,7 @@ export default function Index({ alert }) {
 				showGlobal={showGlobal}
 				setShowGlobal={setShowGlobal}
 				copyToClipboard={copyToClipboard}
+				shareLink={shareLink}
 				exportWords={exportWords}
 			/>
 			<List sx={{ maxWidth: "400px", width: "100%" }}>

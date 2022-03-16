@@ -2,7 +2,7 @@ import { Box, IconButton, Button, Container } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-const AdvancedMenu = ({ showGlobal, setShowGlobal, copyToClipboard, exportWords }) => {
+const AdvancedMenu = ({ showGlobal, setShowGlobal, copyToClipboard, exportWords, shareLink }) => {
 	return (
 		<Box sx={{ width: "100%", maxWidth: 400 }}>
 			<Box
@@ -16,6 +16,7 @@ const AdvancedMenu = ({ showGlobal, setShowGlobal, copyToClipboard, exportWords 
 				<Container disableGutters={true}>
 					<Button onClick={exportWords}>Export</Button>
 					<Button onClick={copyToClipboard}>Copy</Button>
+					<Button onClick={shareLink}>Share</Button>
 				</Container>
 				<IconButton onClick={() => setShowGlobal((s) => !s)}>
 					{showGlobal ? (
