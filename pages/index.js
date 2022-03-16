@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/link-passhref */
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 // MUI
 import {
 	Stack,
@@ -30,6 +31,11 @@ export default function Index({ alert }) {
 	const [primary, setPrimary] = useState("en");
 	const [showGlobal, setShowGlobal] = useState(false);
 	const [dataLoaded, setDataLoaded] = useState(false);
+	// sub
+	const [wordsLoaded, setWordsLoaded] = useState(false);
+	const [unitsLoaded, setUnitsLoaded] = useState(false);
+
+	const { query, replace } = useRouter();
 
 	const deleteWord = (id) => {
 		axios
@@ -96,12 +102,33 @@ export default function Index({ alert }) {
 					secondary: word.cz,
 				}))
 			);
-			setDataLoaded(true);
+			setWordsLoaded(true);
 		});
-		axios
-			.get(`${PATH}units`)
-			.then(({ data: { units: data } }) => setUnits(data));
+		axios.get(`${PATH}units`).then(({ data: { units: data } }) => {
+			setUnits(data);
+			setUnitsLoaded(true);
+		});
 	}, []);
+
+	useEffect(() => {
+		if (wordsLoaded && unitsLoaded) {
+			setDataLoaded(true);
+		}
+	}, [wordsLoaded, unitsLoaded]);
+
+	// watch for query change
+	useEffect(() => {
+		if (query?.activeUnit) {
+			let active = Array.isArray(query.activeUnit)
+				? query.activeUnit
+				: [query.activeUnit];
+			active = active.filter((unit) =>
+				units.map((u) => u.name).includes(unit)
+			);
+			setActiveUnit(Array.from(new Set(active))); // removing duplicated
+			replace("/", undefined, { shallow: true });
+		}
+	}, [query?.activeUnit, replace, dataLoaded, units]);
 
 	// change Primary language
 	useEffect(() => {

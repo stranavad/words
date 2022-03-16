@@ -23,7 +23,7 @@ const Units = ({ alert }) => {
 	useEffect(() => {
 		axios
 			.get(`${PATH}units/detailed`)
-            .then(({ data: {data} }) => setUnits(data));
+			.then(({ data: { data } }) => setUnits(data));
 	}, []);
 
 	// delete unit
@@ -68,10 +68,19 @@ const Units = ({ alert }) => {
 								</Container>
 							}
 						>
-							<ListItemText
-								primary={unit.name}
-								secondary={`Word count: ${unit.wordCount}`}
-							/>
+							<Link
+								href={{
+									pathname: "/",
+									query: { activeUnit: unit.name },
+								}}
+								passHref
+							>
+								<ListItemText
+									sx={{ cursor: "pointer" }}
+									primary={unit.name}
+									secondary={`Word count: ${unit.wordCount}`}
+								/>
+							</Link>
 						</ListItem>
 						<Divider />
 					</div>
