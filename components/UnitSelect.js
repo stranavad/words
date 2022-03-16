@@ -35,18 +35,15 @@ const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 						))}
 					</Box>
 				)}
-				// MenuProps={MenuProps}
 			>
-				{/* <> */}
 					{units.map((name) => (
 						<MenuItem key={name} value={name}>
 							{name}
 						</MenuItem>
 					))}
-					{/* <Link href='/units' passHref>
+					<Link href='/units' passHref>
 						<Button>Units</Button>
-					</Link> */}
-				{/* </> */}
+					</Link>
 			</Select>
 		</FormControl>
 	);
