@@ -16,7 +16,8 @@ const AlertBar = ({ show, setShow, text, severity }) => {
 					<Alert
 						severity={severity}
 						onClose={() => setShow(false)}
-						sx={{ mb: 2}}
+						variant='filled'
+						sx={{ mb: 2, opacity: 1}}
 					>
 						{text}
 					</Alert>
