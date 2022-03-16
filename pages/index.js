@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/link-passhref */
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 // MUI
 import {
 	Stack,
@@ -30,6 +31,11 @@ export default function Index({ alert }) {
 	const [primary, setPrimary] = useState("en");
 	const [showGlobal, setShowGlobal] = useState(false);
 	const [dataLoaded, setDataLoaded] = useState(false);
+	// sub
+	const [wordsLoaded, setWordsLoaded] = useState(false);
+	const [unitsLoaded, setUnitsLoaded] = useState(false);
+
+	const { query, replace } = useRouter();
 
 	const deleteWord = (id) => {
 		axios
@@ -70,12 +76,30 @@ export default function Index({ alert }) {
 			.then(({ data }) => fileDownload(data, "words.txt"));
 	};
 
+	const shareLink = () => {
+		if (typeof window !== 'undefined') {
+			let query = new URLSearchParams();
+			activeUnit.forEach((u) => {
+				query.append('activeUnit', u)
+			})
+			navigator.clipboard.writeText(
+				window.location.href + "?" + query.toString()
+			);
+			alert('Odkaz zkopirovan do clipboard', 'success');
+		}
+	}
+
 	// speaking
 	const { speak, speaking, cancel } = useSpeechSynthesis();
 	const speakWord = (text) => {
 		speaking && cancel();
 		speak({ text });
 	};
+
+	// dataLoaded
+	useEffect(() => {
+		setDataLoaded(wordsLoaded && unitsLoaded);
+	}, [wordsLoaded, unitsLoaded])
 
 	// get initial data
 	useEffect(() => {
@@ -96,12 +120,28 @@ export default function Index({ alert }) {
 					secondary: word.cz,
 				}))
 			);
-			setDataLoaded(true);
+			setWordsLoaded(true);
 		});
-		axios
-			.get(`${PATH}units`)
-			.then(({ data: { units: data } }) => setUnits(data));
+		axios.get(`${PATH}units`).then(({ data: { units: data } }) => {
+			setUnits(data);
+			setUnitsLoaded(true);
+		});
 	}, []);
+
+	// watch for query change
+	useEffect(() => {
+		if (query?.activeUnit && unitsLoaded) {
+			console.log('there is query');
+			let active = Array.isArray(query.activeUnit)
+				? query.activeUnit
+				: [query.activeUnit];
+			active = active.filter((unit) =>
+				units.map((u) => u.name).includes(unit)
+			);
+			setActiveUnit(Array.from(new Set(active))); // removing duplicated
+			replace('/', undefined, { shallow: true });
+		}
+	}, [query?.activeUnit, replace, dataLoaded, units, unitsLoaded]);
 
 	// change Primary language
 	useEffect(() => {
@@ -143,6 +183,7 @@ export default function Index({ alert }) {
 				showGlobal={showGlobal}
 				setShowGlobal={setShowGlobal}
 				copyToClipboard={copyToClipboard}
+				shareLink={shareLink}
 				exportWords={exportWords}
 			/>
 			<List sx={{ maxWidth: "400px", width: "100%" }}>
