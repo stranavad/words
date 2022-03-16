@@ -2,7 +2,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 // MUI
-import { Stack, Fab, Box, CircularProgress, List } from "@mui/material";
+import {
+	Stack,
+	Fab,
+	Box,
+	CircularProgress,
+	List,
+	Divider,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { PATH } from "../config";
 // custom components
@@ -140,14 +147,17 @@ export default function Index({ alert }) {
 			/>
 			<List sx={{ maxWidth: "400px", width: "100%" }}>
 				{words.map((word) => (
-					<Word
-						key={word.id}
-						word={word}
-						deleteWord={deleteWord}
-						showGlobal={showGlobal}
-						speak={speakWord}
-						primary={primary}
-					/>
+					<>
+						<Word
+							key={word.id}
+							word={word}
+							deleteWord={deleteWord}
+							showGlobal={showGlobal}
+							speak={speakWord}
+							primary={primary}
+						/>
+						<Divider />
+					</>
 				))}
 			</List>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
