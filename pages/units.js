@@ -22,8 +22,8 @@ const Units = ({ alert }) => {
 	// get initial data
 	useEffect(() => {
 		axios
-			.get(`${PATH}units`)
-			.then(({ data: { units: data } }) => setUnits(data));
+			.get(`${PATH}units/detailed`)
+            .then(({ data: {data} }) => setUnits(data));
 	}, []);
 
 	// delete unit
@@ -41,8 +41,8 @@ const Units = ({ alert }) => {
 			<Stack
 				sx={{
 					mb: 2,
-                    width: "100%",
-                    maxWidth: '400px',
+					width: "100%",
+					maxWidth: "400px",
 					display: "flex",
 					justifyContent: "left",
 					flexDirection: "row",
@@ -68,7 +68,10 @@ const Units = ({ alert }) => {
 								</Container>
 							}
 						>
-							<ListItemText>{unit.name}</ListItemText>
+							<ListItemText
+								primary={unit.name}
+								secondary={`Word count: ${unit.wordCount}`}
+							/>
 						</ListItem>
 						<Divider />
 					</div>
