@@ -61,6 +61,21 @@ export default function Index({ alert }) {
 		});
 	};
 
+	const updateWord = (word) => {
+		axios
+			.put(`${PATH}words`, {
+				id: word.id,
+				cz: word.cz,
+				en: word.en,
+			})
+			.then((res) => {
+				if (res.data.message === "updated") {
+					alert("Slovo upraveno", "success");
+					loadData();
+				}
+			});
+	};
+
 	const copyToClipboard = () => {
 		axios
 			.post(`${PATH}words/export`, { units: activeUnit })
@@ -77,17 +92,17 @@ export default function Index({ alert }) {
 	};
 
 	const shareLink = () => {
-		if (typeof window !== 'undefined') {
+		if (typeof window !== "undefined") {
 			let query = new URLSearchParams();
 			activeUnit.forEach((u) => {
-				query.append('activeUnit', u)
-			})
+				query.append("activeUnit", u);
+			});
 			navigator.clipboard.writeText(
 				window.location.href + "?" + query.toString()
 			);
-			alert('Odkaz zkopirovan do clipboard', 'success');
+			alert("Odkaz zkopirovan do clipboard", "success");
 		}
-	}
+	};
 
 	// speaking
 	const { speak, speaking, cancel } = useSpeechSynthesis();
@@ -99,10 +114,12 @@ export default function Index({ alert }) {
 	// dataLoaded
 	useEffect(() => {
 		setDataLoaded(wordsLoaded && unitsLoaded);
-	}, [wordsLoaded, unitsLoaded])
+	}, [wordsLoaded, unitsLoaded]);
 
 	// get initial data
-	useEffect(() => {
+	useEffect(() => loadData(), []);
+
+	const loadData = () => {
 		axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
 			setOriginalWords(
 				data.map((word) => ({
@@ -126,12 +143,12 @@ export default function Index({ alert }) {
 			setUnits(data);
 			setUnitsLoaded(true);
 		});
-	}, []);
+	};
 
 	// watch for query change
 	useEffect(() => {
 		if (query?.activeUnit && unitsLoaded) {
-			console.log('there is query');
+			console.log("there is query");
 			let active = Array.isArray(query.activeUnit)
 				? query.activeUnit
 				: [query.activeUnit];
@@ -139,7 +156,7 @@ export default function Index({ alert }) {
 				units.map((u) => u.name).includes(unit)
 			);
 			setActiveUnit(Array.from(new Set(active))); // removing duplicated
-			replace('/', undefined, { shallow: true });
+			replace("/", undefined, { shallow: true });
 		}
 	}, [query?.activeUnit, replace, dataLoaded, units, unitsLoaded]);
 
@@ -188,17 +205,16 @@ export default function Index({ alert }) {
 			/>
 			<List sx={{ maxWidth: "400px", width: "100%" }}>
 				{words.map((word) => (
-					<>
-						<Word
-							key={word.id}
-							word={word}
-							deleteWord={deleteWord}
-							showGlobal={showGlobal}
-							speak={speakWord}
-							primary={primary}
-						/>
-						<Divider />
-					</>
+					<Word
+						key={word.id}
+						word={word}
+						deleteWord={deleteWord}
+						showGlobal={showGlobal}
+						speak={speakWord}
+						primary={primary}
+						triggerReload={loadData}
+						updateWord={updateWord}
+					/>
 				))}
 			</List>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>

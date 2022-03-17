@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 // MUI
-import {
-	List,
-	ListItem,
-	ListItemText,
-	IconButton,
-	Divider,
-	Container,
-	Stack,
-	Button,
-} from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { List, Stack, Button, Box, Fab } from "@mui/material";
+import { Add } from "@mui/icons-material";
+// custom components
+import Unit from "../components/Unit";
 // modules
 import axios from "axios";
 import { PATH } from "../config";
@@ -20,20 +13,36 @@ const Units = ({ alert }) => {
 	const [units, setUnits] = useState([]);
 
 	// get initial data
-	useEffect(() => {
+	useEffect(() => loadData(), []);
+
+	const loadData = () => {
 		axios
 			.get(`${PATH}units/detailed`)
-			.then(({ data: { data } }) => setUnits(data));
-	}, []);
+			.then(({ data: { data } }) =>
+				setUnits(data.map((u) => ({ ...u, showEdit: false })))
+			);
+	};
 
 	// delete unit
 	const deleteUnit = (id) => {
 		axios.delete(`${PATH}units`, { params: { id } }).then(() => {
 			alert("Vymazano adios", "success");
-			axios
-				.get(`${PATH}units`)
-				.then(({ data: { units: data } }) => setUnits(data));
+			loadData();
 		});
+	};
+
+	// publis update unit
+	const updateUnit = (unit) => {
+		axios
+			.put(`${PATH}units`, { name: unit.name, id: unit.id })
+			.then((res) => {
+				loadData();
+				if (res.data.message === "updated") {
+					alert("Unit was successfully updated", "success");
+				} else {
+					alert("There was some error", "error");
+				}
+			});
 	};
 
 	return (
@@ -54,38 +63,22 @@ const Units = ({ alert }) => {
 			</Stack>
 			<List sx={{ maxWidth: "400px", width: "100%" }}>
 				{units.map((unit) => (
-					<div key={unit.id}>
-						<ListItem
-							key={unit.id}
-							secondaryAction={
-								<Container disableGutters={true}>
-									<IconButton
-										color="error"
-										onClick={() => deleteUnit(unit.id)}
-									>
-										<Delete />
-									</IconButton>
-								</Container>
-							}
-						>
-							<Link
-								href={{
-									pathname: "/",
-									query: { activeUnit: unit.name },
-								}}
-								passHref
-							>
-								<ListItemText
-									sx={{ cursor: "pointer" }}
-									primary={unit.name}
-									secondary={`Word count: ${unit.wordCount}`}
-								/>
-							</Link>
-						</ListItem>
-						<Divider />
-					</div>
+					<Unit
+						key={unit.id}
+						unit={unit}
+						units={units}
+						deleteUnit={deleteUnit}
+						updateUnit={updateUnit}
+					/>
 				))}
 			</List>
+			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
+				<Link href="/add" passHref>
+					<Fab color="primary">
+						<Add />
+					</Fab>
+				</Link>
+			</Box>
 		</>
 	);
 };
