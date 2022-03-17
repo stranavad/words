@@ -70,10 +70,11 @@ export default function Index({ alert }) {
 			})
 			.then((res) => {
 				if (res.data.message === "updated") {
+					alert("Slovo upraveno", "success");
 					loadData();
 				}
 			});
-	}
+	};
 
 	const copyToClipboard = () => {
 		axios
@@ -204,19 +205,16 @@ export default function Index({ alert }) {
 			/>
 			<List sx={{ maxWidth: "400px", width: "100%" }}>
 				{words.map((word) => (
-					<>
-						<Word
-							key={word.id}
-							word={word}
-							deleteWord={deleteWord}
-							showGlobal={showGlobal}
-							speak={speakWord}
-							primary={primary}
-							triggerReload={loadData}
-							updateWord={updateWord}
-						/>
-						<Divider />
-					</>
+					<Word
+						key={word.id}
+						word={word}
+						deleteWord={deleteWord}
+						showGlobal={showGlobal}
+						speak={speakWord}
+						primary={primary}
+						triggerReload={loadData}
+						updateWord={updateWord}
+					/>
 				))}
 			</List>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
