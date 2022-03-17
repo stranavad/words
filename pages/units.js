@@ -12,7 +12,7 @@ import {
 	Button,
 	TextField,
 } from "@mui/material";
-import { Delete, Edit, Check, ResetTvRounded } from "@mui/icons-material";
+import { Delete, Edit, Check, Close } from "@mui/icons-material";
 // modules
 import axios from "axios";
 import { PATH } from "../config";
@@ -101,7 +101,9 @@ const Units = ({ alert }) => {
 									<Container disableGutters={true}>
 										<IconButton
 											color="secondary"
-											onClick={() => showEditUnit(unit.id)}
+											onClick={() =>
+												showEditUnit(unit.id)
+											}
 										>
 											<Edit />
 										</IconButton>
@@ -132,12 +134,30 @@ const Units = ({ alert }) => {
 							<ListItem
 								key={unit.id}
 								secondaryAction={
-									<IconButton
-										color="success"
-										onClick={() => updateUnit(unit.id)}
-									>
-										<Check />
-									</IconButton>
+									<Container disableGutters={true}>
+										<IconButton
+											color="success"
+											onClick={() => updateUnit(unit.id)}
+										>
+											<Check />
+										</IconButton>
+										<IconButton
+											color="error"
+											onClick={() =>
+												setUnits((uns) =>
+													uns.map((u) => ({
+														...u,
+														showEdit:
+															u.id === unit.id
+																? false
+																: u.showEdit,
+													}))
+												)
+											}
+										>
+											<Close />
+										</IconButton>
+									</Container>
 								}
 							>
 								<TextField
