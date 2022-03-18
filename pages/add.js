@@ -45,8 +45,7 @@ const Add = ({ alert }) => {
 		console.log("adding unit");
 		axios
 			.post(`${PATH}units`, {
-				...unit,
-				name: unit.name.replace('"', "'"),
+				unit
 			})
 			.then(() => {
 				alert("New unit created", "success");

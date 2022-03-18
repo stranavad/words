@@ -95,7 +95,7 @@ export default function Index({ alert }) {
 		if (typeof window !== "undefined") {
 			let query = new URLSearchParams();
 			activeUnit.forEach((u) => {
-				query.append("activeUnit", u);
+				query.append("activeUnit", u.id);
 			});
 			navigator.clipboard.writeText(
 				window.location.href + "?" + query.toString()
@@ -152,11 +152,9 @@ export default function Index({ alert }) {
 			let active = Array.isArray(query.activeUnit)
 				? query.activeUnit
 				: [query.activeUnit];
-			active = active.filter((unit) =>
-				units.map((u) => u.name).includes(unit)
-			);
-			setActiveUnit(Array.from(new Set(active))); // removing duplicated
-			replace("/", undefined, { shallow: true });
+			active = active.map((a) => parseInt(a, 10));
+			setActiveUnit(units.filter((u) => active.includes(u.id))); // removing duplicated
+			replace("/", undefined, { shallow: true }); // removing query
 		}
 	}, [query?.activeUnit, replace, dataLoaded, units, unitsLoaded]);
 
@@ -175,14 +173,16 @@ export default function Index({ alert }) {
 	useEffect(() => {
 		if (activeUnit.length > 0) {
 			setWords(
-				originalWords.filter((word) => activeUnit.includes(word.unit))
+				originalWords.filter((word) =>
+					activeUnit.map((au) => au.id).includes(word.unit)
+				)
 			);
 		} else {
 			setWords(originalWords);
 		}
 	}, [activeUnit, originalWords]);
 
-	return dataLoaded ? (
+	return (
 		<>
 			<Stack
 				direction="row"
@@ -190,7 +190,7 @@ export default function Index({ alert }) {
 				sx={{ maxWidth: 400, width: "100%" }}
 			>
 				<UnitSelect
-					units={units.map((unit) => unit.name)}
+					units={units}
 					activeUnit={activeUnit}
 					setActiveUnit={setActiveUnit}
 				/>
@@ -203,20 +203,24 @@ export default function Index({ alert }) {
 				shareLink={shareLink}
 				exportWords={exportWords}
 			/>
-			<List sx={{ maxWidth: "400px", width: "100%" }}>
-				{words.map((word) => (
-					<Word
-						key={word.id}
-						word={word}
-						deleteWord={deleteWord}
-						showGlobal={showGlobal}
-						speak={speakWord}
-						primary={primary}
-						triggerReload={loadData}
-						updateWord={updateWord}
-					/>
-				))}
-			</List>
+			{dataLoaded ? (
+				<List sx={{ maxWidth: "400px", width: "100%" }}>
+					{words.map((word) => (
+						<Word
+							key={word.id}
+							word={word}
+							deleteWord={deleteWord}
+							showGlobal={showGlobal}
+							speak={speakWord}
+							primary={primary}
+							triggerReload={loadData}
+							updateWord={updateWord}
+						/>
+					))}
+				</List>
+			) : (
+				<CircularProgress />
+			)}
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
@@ -225,7 +229,5 @@ export default function Index({ alert }) {
 				</Link>
 			</Box>
 		</>
-	) : (
-		<CircularProgress />
 	);
 }
