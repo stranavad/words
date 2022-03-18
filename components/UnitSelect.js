@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 import {
 	FormControl,
 	InputLabel,
@@ -8,8 +8,9 @@ import {
 	OutlinedInput,
 	Chip,
 	Box,
-	Button
+	Button,
 } from "@mui/material";
+import { pickContrastColor } from "../utils/pickContrastColor.ts";
 
 const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 	const [open, setOpen] = useState(false);
@@ -21,29 +22,36 @@ const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 				open={open}
 				multiple
 				value={activeUnit}
-				onChange={({ target: { value } }) =>
-					setActiveUnit(
-						typeof value === "string" ? value.split(",") : value
-					)
+				onChange={({ target: { value } }) => 
+					setActiveUnit(value)
 				}
 				onClick={() => setOpen((op) => !op)}
 				input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
 				renderValue={(selected) => (
 					<Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
 						{selected.map((value) => (
-							<Chip key={value} label={value} color="primary" />
+							<Chip
+								key={value.id}
+								label={value.name}
+								sx={{
+									backgroundColor: value.color,
+									color: pickContrastColor(value.color)
+										? "black"
+										: "white",
+								}}
+							/>
 						))}
 					</Box>
 				)}
 			>
-					{units.map((name) => (
-						<MenuItem key={name} value={name}>
-							{name}
-						</MenuItem>
-					))}
-					<Link href='/units' passHref>
-						<Button>Units</Button>
-					</Link>
+				{units.map((unit) => (
+					<MenuItem key={unit.id} value={unit}>
+						{unit.name}
+					</MenuItem>
+				))}
+				<Link href="/units" passHref>
+					<Button>Units</Button>
+				</Link>
 			</Select>
 		</FormControl>
 	);

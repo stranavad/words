@@ -19,6 +19,7 @@ import {
 	Close,
 } from "@mui/icons-material";
 
+
 const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 	const [show, setShow] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -98,6 +99,7 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 					onClick={() => setShow((old) => !old)}
 					primary={word.primary}
 					secondary={show ? word.secondary : hashedWord}
+					// primaryTypographyProps={{color: 'green'}}
 					sx={{ cursor: "pointer" }}
 				/>
 			</ListItem>

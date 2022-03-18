@@ -8,14 +8,19 @@ import {
 	ListItemText,
 	TextField,
 	Divider,
+	Stack,
 } from "@mui/material";
 import { Delete, Close, Edit, Check } from "@mui/icons-material";
+import PickColor from "./PickColor";
 
 const Unit = ({ unit, deleteUnit, updateUnit, units }) => {
 	const [updatedUnit, setUpdatedUnit] = useState({});
 	const [showEdit, setShowEdit] = useState(false);
 
-	useEffect(() => setUpdatedUnit(unit), [unit]);
+	useEffect(() => {
+		console.log('rerunning use effect');
+		setUpdatedUnit(unit);
+	}, [unit]);
 
 	return !showEdit ? (
 		<>
@@ -84,13 +89,25 @@ const Unit = ({ unit, deleteUnit, updateUnit, units }) => {
 					</Container>
 				}
 			>
-				<TextField
-					value={updatedUnit.name}
-					onChange={(e) =>
-						setUpdatedUnit((u) => ({ ...u, name: e.target.value }))
-					}
-					autoFocus={true}
-				/>
+				<Stack>
+					<TextField
+						value={updatedUnit.name}
+						onChange={(e) =>
+							setUpdatedUnit((u) => ({
+								...u,
+								name: e.target.value,
+							}))
+						}
+						autoFocus={true}
+					/>
+					<PickColor
+						color={updatedUnit.color}
+						setColor={(c) =>
+							setUpdatedUnit((u) => ({ ...u, color: c }))
+						}
+						unitName={updatedUnit.name}
+					/>
+				</Stack>
 			</ListItem>
 			<Divider />
 		</>

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Stack, TextField, Button, Typography } from "@mui/material";
+import PickColor from "./PickColor";
 
 const AddUnit = ({ addUnit, units }) => {
-	const [unit, setUnit] = useState("");
+	const [unit, setUnit] = useState({ color: "#1976d2", name: "" });
 
 	return (
 		<Stack
@@ -10,8 +11,11 @@ const AddUnit = ({ addUnit, units }) => {
 			component="form"
 			onSubmit={(e) => {
 				e.preventDefault();
-				addUnit(unit.trim());
-				setUnit("");
+				addUnit({
+					name: unit.name.trim().replace('"', "'"),
+					color: unit.color,
+				});
+				setUnit({ color: "#1976d2", name: "" });
 			}}
 		>
 			<Typography variant="h5" sx={{ mb: 2 }}>
@@ -20,15 +24,22 @@ const AddUnit = ({ addUnit, units }) => {
 			<TextField
 				variant="outlined"
 				label="Unit"
-				value={unit}
-				onChange={(e) => setUnit(e.target.value)}
+				value={unit.name}
+				onChange={(e) =>
+					setUnit((u) => ({ ...u, name: e.target.value }))
+				}
 				sx={{ mb: 2 }}
-				error={units.includes(unit)}
+				error={units.includes(unit.name)}
 				helperText={
-					units.includes(unit) ? "Tato lekce jiz existuje" : null
+					units.includes(unit.name) ? "Tato lekce jiz existuje" : null
 				}
 			/>
-			{!units.includes(unit) && unit.trim() !== "" && (
+			<PickColor
+				color={unit.color}
+				setColor={(c) => setUnit((u) => ({ ...u, color: c }))}
+				unitName={unit.name}
+			/>
+			{!units.includes(unit) && unit?.name?.trim() !== "" && (
 				<Button type="submit" variant="contained" color="primary">
 					Pridat
 				</Button>

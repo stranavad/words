@@ -16,11 +16,14 @@ const Units = ({ alert }) => {
 	useEffect(() => loadData(), []);
 
 	const loadData = () => {
-		axios
-			.get(`${PATH}units/detailed`)
-			.then(({ data: { data } }) =>
-				setUnits(data.map((u) => ({ ...u, showEdit: false })))
-			);
+		axios.get(`${PATH}units/detailed`).then(({ data: { data } }) =>
+			setUnits(
+				data.map((u) => ({
+					...u,
+					showEdit: false,
+				}))
+			)
+		);
 	};
 
 	// delete unit
@@ -34,7 +37,11 @@ const Units = ({ alert }) => {
 	// publis update unit
 	const updateUnit = (unit) => {
 		axios
-			.put(`${PATH}units`, { name: unit.name.replace('"', "'"), id: unit.id })
+			.put(`${PATH}units`, {
+				name: unit.name.replace('"', "'"),
+				id: unit.id,
+				color: unit.color
+			})
 			.then((res) => {
 				loadData();
 				if (res.data.message === "updated") {
