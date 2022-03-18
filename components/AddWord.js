@@ -65,7 +65,7 @@ const AddWord = ({ addWord, units }) => {
 			}}
 		>
 			<Typography variant="h5" sx={{ mb: 2 }}>
-				Pridat slovo
+				Add Word
 			</Typography>
 			<TextField
 				variant="outlined"
