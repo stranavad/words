@@ -15,7 +15,7 @@ const AddUnit = ({ addUnit, units }) => {
 			}}
 		>
 			<Typography variant="h5" sx={{ mb: 2 }}>
-				Pridat Lekci
+				Add Unit
 			</Typography>
 			<TextField
 				variant="outlined"
