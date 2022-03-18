@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 // MUI
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, Tab, Tabs, Box, Typography } from "@mui/material";
 // Custom components
 import AddWord from "../components/AddWord";
 import AddUnit from "../components/AddUnit";
+import TabPanel from '../components/TabPanel';
 import { PATH } from "../config";
 // Modules
 import axios from "axios";
@@ -13,6 +14,7 @@ import axios from "axios";
 const Add = ({ alert }) => {
 	const [words, setWords] = useState([]);
 	const [units, setUnits] = useState([]);
+	const [tab, setTab] = useState(0);
 
 	// get initial data
 	useEffect(() => {
@@ -38,6 +40,7 @@ const Add = ({ alert }) => {
 					.then(({ data: { words: data } }) => setWords(data));
 			});
 	};
+
 	const addUnit = (unit) => {
 		console.log("adding unit");
 		axios
@@ -46,12 +49,18 @@ const Add = ({ alert }) => {
 				name: unit.name.replace('"', "'"),
 			})
 			.then(() => {
-				alert("Vytvorena nova lekce", "success");
+				alert("New unit created", "success");
 				axios
 					.get(`${PATH}units`)
 					.then(({ data: { units: data } }) => setUnits(data));
 			});
 	};
+
+	// generating props for tabs
+	const a11yProps = (index) => ({
+		id: `simple-tab-${index}`,
+		"aria-controls": `simple-tabpanel-${index}`,
+	});
 
 	return (
 		<>
@@ -66,18 +75,37 @@ const Add = ({ alert }) => {
 					}}
 				>
 					<Link href="/" passHref>
-						<Button variant="contained">Zpet</Button>
+						<Button variant="contained">Home</Button>
 					</Link>
 				</Stack>
-				<AddWord
-					words={words}
-					addWord={addWord}
-					units={units.map((u) => u.name)}
-				/>
-				<AddUnit units={units.map((u) => u.name)} addUnit={addUnit} />
+				<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+					<Tabs
+						value={tab}
+						onChange={(_, newValue) => setTab(newValue)}
+						aria-label="basic tabs example"
+					>
+						<Tab label="Word" {...a11yProps(0)} />
+						<Tab label="Unit" {...a11yProps(1)} />
+					</Tabs>
+				</Box>
+				<TabPanel value={tab} index={0}>
+					<AddWord
+						words={words}
+						addWord={addWord}
+						units={units.map((u) => u.name)}
+					/>
+				</TabPanel>
+				<TabPanel value={tab} index={1}>
+					<AddUnit
+						units={units.map((u) => u.name)}
+						addUnit={addUnit}
+					/>
+				</TabPanel>
 			</Stack>
 		</>
 	);
 };
+
+
 
 export default Add;
