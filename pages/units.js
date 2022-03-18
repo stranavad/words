@@ -34,7 +34,7 @@ const Units = ({ alert }) => {
 	// publis update unit
 	const updateUnit = (unit) => {
 		axios
-			.put(`${PATH}units`, { name: unit.name, id: unit.id })
+			.put(`${PATH}units`, { name: unit.name.replace('"', "'"), id: unit.id })
 			.then((res) => {
 				loadData();
 				if (res.data.message === "updated") {

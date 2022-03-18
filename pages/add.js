@@ -27,22 +27,33 @@ const Add = ({ alert }) => {
 	}, []);
 
 	const addWord = (word) => {
-		axios.post(`${PATH}words`, word).then(() => {
-			alert("Vytvoreno nove slovo", "success");
-			axios
-				.get(`${PATH}words`)
-				.then(({ data: { words: data } }) => setWords(data));
-		});
+		axios
+			.post(`${PATH}words`, {
+				...word,
+				cz: word.cz.replace('"', "'"),
+				en: word.en.replace('"', "'"),
+			})
+			.then(() => {
+				alert("Vytvoreno nove slovo", "success");
+				axios
+					.get(`${PATH}words`)
+					.then(({ data: { words: data } }) => setWords(data));
+			});
 	};
 
 	const addUnit = (unit) => {
 		console.log("adding unit");
-		axios.post(`${PATH}units`, { unit }).then(() => {
-			alert("Vytvorena nova lekce", "success");
-			axios
-				.get(`${PATH}units`)
-				.then(({ data: { units: data } }) => setUnits(data));
-		});
+		axios
+			.post(`${PATH}units`, {
+				...unit,
+				name: unit.name.replace('"', "'"),
+			})
+			.then(() => {
+				alert("New unit created", "success");
+				axios
+					.get(`${PATH}units`)
+					.then(({ data: { units: data } }) => setUnits(data));
+			});
 	};
 
 	// generating props for tabs
