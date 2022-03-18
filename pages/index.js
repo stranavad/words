@@ -65,8 +65,8 @@ export default function Index({ alert }) {
 		axios
 			.put(`${PATH}words`, {
 				id: word.id,
-				cz: word.cz,
-				en: word.en,
+				cz: word.cz.replace('"', "'"),
+				en: word.en.replace('"', "'"),
 			})
 			.then((res) => {
 				if (res.data.message === "updated") {
