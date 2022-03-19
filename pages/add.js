@@ -6,25 +6,27 @@ import { Stack, Button, Tab, Tabs, Box, Typography } from "@mui/material";
 // Custom components
 import AddWord from "../components/AddWord";
 import AddUnit from "../components/AddUnit";
-import TabPanel from '../components/TabPanel';
+import TabPanel from "../components/TabPanel";
 import { PATH } from "../config";
 // Modules
 import axios from "axios";
 
-const Add = ({ alert }) => {
-	const [words, setWords] = useState([]);
-	const [units, setUnits] = useState([]);
+const Add = ({ alert, wordsProp, unitsProp }) => {
+	const [words, setWords] = useState(wordsProp);
+	const [units, setUnits] = useState(unitsProp);
 	const [tab, setTab] = useState(0);
 
 	// get initial data
-	useEffect(() => {
-		axios
-			.get(`${PATH}words`)
-			.then(({ data: { words: data } }) => setWords(data));
-		axios
-			.get(`${PATH}units`)
-			.then(({ data: { units: data } }) => setUnits(data));
-	}, []);
+	const loadWords = async () => {
+		const res = await fetch(`${PATH}words`);
+		const { words } = await res.json();
+		setWords(words);
+	};
+	const loadUnits = async () => {
+		const res = await fetch(`${PATH}units`);
+		const { units } = await res.json();
+		setUnits(units);
+	};
 
 	const addWord = (word) => {
 		axios
@@ -35,9 +37,7 @@ const Add = ({ alert }) => {
 			})
 			.then(() => {
 				alert("Vytvoreno nove slovo", "success");
-				axios
-					.get(`${PATH}words`)
-					.then(({ data: { words: data } }) => setWords(data));
+				loadWords();
 			});
 	};
 
@@ -45,13 +45,11 @@ const Add = ({ alert }) => {
 		console.log("adding unit");
 		axios
 			.post(`${PATH}units`, {
-				unit
+				unit,
 			})
 			.then(() => {
 				alert("New unit created", "success");
-				axios
-					.get(`${PATH}units`)
-					.then(({ data: { units: data } }) => setUnits(data));
+				loadUnits();
 			});
 	};
 
@@ -105,6 +103,10 @@ const Add = ({ alert }) => {
 	);
 };
 
-
-
 export default Add;
+
+export async function getStaticProps() {
+	const res = await fetch(`${PATH}utils/initial`);
+	const { units, words } = await res.json();
+	return { props: { unitsProp: units, wordsProp: words }, revalidate: 10 };
+}

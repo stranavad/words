@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 // MUI
 import { List, Stack, Button, Box, Fab } from "@mui/material";
@@ -9,21 +9,13 @@ import Unit from "../components/Unit";
 import axios from "axios";
 import { PATH } from "../config";
 
-const Units = ({ alert }) => {
-	const [units, setUnits] = useState([]);
+const Units = ({ alert, unitsProp }) => {
+	const [units, setUnits] = useState(unitsProp);
 
-	// get initial data
-	useEffect(() => loadData(), []);
-
-	const loadData = () => {
-		axios.get(`${PATH}units/detailed`).then(({ data: { data } }) =>
-			setUnits(
-				data.map((u) => ({
-					...u,
-					showEdit: false,
-				}))
-			)
-		);
+	const loadData = async () => {
+		const res = await fetch(`${PATH}units/detailed`);
+		const { units } = await res.json();
+		setUnits(units);
 	};
 
 	// delete unit
@@ -40,7 +32,7 @@ const Units = ({ alert }) => {
 			.put(`${PATH}units`, {
 				name: unit.name.replace('"', "'"),
 				id: unit.id,
-				color: unit.color
+				color: unit.color,
 			})
 			.then((res) => {
 				loadData();
@@ -91,3 +83,9 @@ const Units = ({ alert }) => {
 };
 
 export default Units;
+
+export async function getStaticProps() {
+	const res = await fetch(`${PATH}units`);
+	const { units } = await res.json();
+	return { props: { unitsProp: units }, revalidate: 10 };
+}

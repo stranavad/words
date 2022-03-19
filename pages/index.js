@@ -7,9 +7,7 @@ import {
 	Stack,
 	Fab,
 	Box,
-	CircularProgress,
 	List,
-	Divider,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { PATH } from "../config";
@@ -23,42 +21,17 @@ import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";
 import fileDownload from "js-file-download";
 
-export default function Index({ alert }) {
-	const [words, setWords] = useState([]);
-	const [originalWords, setOriginalWords] = useState([]);
-	const [units, setUnits] = useState([]);
+export default function Index({ alert, wordsProp, unitsProp }) {
+	const [words, setWords] = useState(wordsProp);
+	const [originalWords, setOriginalWords] = useState(wordsProp);
+	const [units, setUnits] = useState(unitsProp);
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [primary, setPrimary] = useState("en");
 	const [showGlobal, setShowGlobal] = useState(false);
-	const [dataLoaded, setDataLoaded] = useState(false);
-	// sub
-	const [wordsLoaded, setWordsLoaded] = useState(false);
-	const [unitsLoaded, setUnitsLoaded] = useState(false);
 
 	const { query, replace } = useRouter();
-
 	const deleteWord = (id) => {
-		axios
-			.delete(`${PATH}words`, { params: { id } })
-			.then((res) => console.log(res));
-		axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
-			setOriginalWords(
-				data.map((word) => ({
-					...word,
-					show: true,
-					primary: word.en,
-					secondary: word.cz,
-				}))
-			);
-			setWords(
-				data.map((word) => ({
-					...word,
-					show: true,
-					primary: word.en,
-					secondary: word.cz,
-				}))
-			);
-		});
+		axios.delete(`${PATH}words`, { params: { id } }).then(() => loadData());
 	};
 
 	const updateWord = (word) => {
@@ -111,44 +84,16 @@ export default function Index({ alert }) {
 		speak({ text });
 	};
 
-	// dataLoaded
-	useEffect(() => {
-		setDataLoaded(wordsLoaded && unitsLoaded);
-	}, [wordsLoaded, unitsLoaded]);
-
-	// get initial data
-	useEffect(() => loadData(), []);
-
-	const loadData = () => {
-		axios.get(`${PATH}words`).then(({ data: { words: data } }) => {
-			setOriginalWords(
-				data.map((word) => ({
-					...word,
-					show: true,
-					primary: word.en,
-					secondary: word.cz,
-				}))
-			);
-			setWords(
-				data.map((word) => ({
-					...word,
-					show: true,
-					primary: word.en,
-					secondary: word.cz,
-				}))
-			);
-			setWordsLoaded(true);
-		});
-		axios.get(`${PATH}units`).then(({ data: { units: data } }) => {
-			setUnits(data);
-			setUnitsLoaded(true);
-		});
+	const loadData = async () => {
+		const res = await fetch(`${PATH}utils/initial`);
+		const { words, units } = await res.json();
+		setOriginalWords(words);
+		setUnits(units);
 	};
 
 	// watch for query change
 	useEffect(() => {
-		if (query?.activeUnit && unitsLoaded) {
-			console.log("there is query");
+		if (query?.activeUnit) {
 			let active = Array.isArray(query.activeUnit)
 				? query.activeUnit
 				: [query.activeUnit];
@@ -156,7 +101,7 @@ export default function Index({ alert }) {
 			setActiveUnit(units.filter((u) => active.includes(u.id))); // removing duplicated
 			replace("/", undefined, { shallow: true }); // removing query
 		}
-	}, [query?.activeUnit, replace, dataLoaded, units, unitsLoaded]);
+	}, [query?.activeUnit, replace, units]);
 
 	// change Primary language
 	useEffect(() => {
@@ -203,24 +148,20 @@ export default function Index({ alert }) {
 				shareLink={shareLink}
 				exportWords={exportWords}
 			/>
-			{dataLoaded ? (
-				<List sx={{ maxWidth: "400px", width: "100%" }}>
-					{words.map((word) => (
-						<Word
-							key={word.id}
-							word={word}
-							deleteWord={deleteWord}
-							showGlobal={showGlobal}
-							speak={speakWord}
-							primary={primary}
-							triggerReload={loadData}
-							updateWord={updateWord}
-						/>
-					))}
-				</List>
-			) : (
-				<CircularProgress />
-			)}
+			<List sx={{ maxWidth: "400px", width: "100%" }}>
+				{words.map((word) => (
+					<Word
+						key={word.id}
+						word={word}
+						deleteWord={deleteWord}
+						showGlobal={showGlobal}
+						speak={speakWord}
+						primary={primary}
+						triggerReload={loadData}
+						updateWord={updateWord}
+					/>
+				))}
+			</List>
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
@@ -230,4 +171,16 @@ export default function Index({ alert }) {
 			</Box>
 		</>
 	);
+}
+
+export async function getStaticProps() {
+	const res = await fetch(`${PATH}utils/initial`);
+	const { words: wordsProp, units: unitsProp } = await res.json();
+	return {
+		props: {
+			wordsProp,
+			unitsProp,
+		},
+		revalidate: 10,
+	};
 }
