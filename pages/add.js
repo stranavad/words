@@ -110,5 +110,5 @@ export default Add;
 export async function getStaticProps() {
 	const res = await fetch(`${PATH}utils/initial`);
 	const { units, words } = await res.json();
-	return { props: { unitsProp: units, wordsProp: words }, revalidate: 10 };
+	return { props: { unitsProp: units, wordsProp: words }};
 }

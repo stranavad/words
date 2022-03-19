@@ -89,5 +89,5 @@ export default Units;
 export async function getStaticProps() {
 	const res = await fetch(`${PATH}units`);
 	const { units } = await res.json();
-	return { props: { unitsProp: units }, revalidate: 10 };
+	return { props: { unitsProp: units }};
 }

@@ -32,6 +32,7 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 		});
 	};
 
+
 	const updateWord = (word) => {
 		axios
 			.put(`${PATH}words`, {
@@ -115,6 +116,10 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 
 	// change active units filter
 	useEffect(() => {
+		setFilteredWords();
+	}, [activeUnit, originalWords]);
+
+	const setFilteredWords = () => {
 		if (activeUnit.length > 0) {
 			setWords(
 				originalWords.filter((word) =>
@@ -124,7 +129,7 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 		} else {
 			setWords(originalWords);
 		}
-	}, [activeUnit, originalWords]);
+	}
 
 	return (
 		<>
@@ -180,6 +185,5 @@ export async function getStaticProps() {
 			wordsProp,
 			unitsProp,
 		},
-		revalidate: 10,
 	};
 }
