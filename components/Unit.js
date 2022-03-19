@@ -105,7 +105,6 @@ const Unit = ({ unit, deleteUnit, updateUnit, units }) => {
 						setColor={(c) =>
 							setUpdatedUnit((u) => ({ ...u, color: c }))
 						}
-						unitName={updatedUnit.name}
 					/>
 				</Stack>
 			</ListItem>

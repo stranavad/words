@@ -37,7 +37,6 @@ const AddUnit = ({ addUnit, units }) => {
 			<PickColor
 				color={unit.color}
 				setColor={(c) => setUnit((u) => ({ ...u, color: c }))}
-				unitName={unit.name}
 			/>
 			{!units.includes(unit) && unit?.name?.trim() !== "" && (
 				<Button type="submit" variant="contained" color="primary">

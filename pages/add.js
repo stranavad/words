@@ -35,9 +35,10 @@ const Add = ({ alert, wordsProp, unitsProp }) => {
 				cz: word.cz.replace('"', "'"),
 				en: word.en.replace('"', "'"),
 			})
-			.then(() => {
+			.then(async () => {
 				alert("Vytvoreno nove slovo", "success");
 				loadWords();
+				await fetch("/api/revalidate");
 			});
 	};
 
@@ -47,9 +48,10 @@ const Add = ({ alert, wordsProp, unitsProp }) => {
 			.post(`${PATH}units`, {
 				unit,
 			})
-			.then(() => {
+			.then(async () => {
 				alert("New unit created", "success");
 				loadUnits();
+				await fetch("/api/revalidate");
 			});
 	};
 
@@ -108,5 +110,5 @@ export default Add;
 export async function getStaticProps() {
 	const res = await fetch(`${PATH}utils/initial`);
 	const { units, words } = await res.json();
-	return { props: { unitsProp: units, wordsProp: words }, revalidate: 10 };
+	return { props: { unitsProp: units, wordsProp: words }};
 }
