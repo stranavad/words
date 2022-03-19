@@ -3,12 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // MUI
-import {
-	Stack,
-	Fab,
-	Box,
-	List,
-} from "@mui/material";
+import { Stack, Fab, Box, List } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { PATH } from "../config";
 // custom components
@@ -31,7 +26,10 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 
 	const { query, replace } = useRouter();
 	const deleteWord = (id) => {
-		axios.delete(`${PATH}words`, { params: { id } }).then(() => loadData());
+		axios.delete(`${PATH}words`, { params: { id } }).then(async () => {
+			loadData();
+			await fetch("/api/revalidate");
+		});
 	};
 
 	const updateWord = (word) => {
@@ -41,10 +39,11 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 				cz: word.cz.replace('"', "'"),
 				en: word.en.replace('"', "'"),
 			})
-			.then((res) => {
+			.then(async (res) => {
 				if (res.data.message === "updated") {
 					alert("Slovo upraveno", "success");
 					loadData();
+					await fetch("/api/revalidate");
 				}
 			});
 	};

@@ -20,9 +20,10 @@ const Units = ({ alert, unitsProp }) => {
 
 	// delete unit
 	const deleteUnit = (id) => {
-		axios.delete(`${PATH}units`, { params: { id } }).then(() => {
+		axios.delete(`${PATH}units`, { params: { id } }).then(async () => {
 			alert("Vymazano adios", "success");
 			loadData();
+			await fetch("/api/revalidate");
 		});
 	};
 
@@ -34,13 +35,14 @@ const Units = ({ alert, unitsProp }) => {
 				id: unit.id,
 				color: unit.color,
 			})
-			.then((res) => {
+			.then(async (res) => {
 				loadData();
 				if (res.data.message === "updated") {
 					alert("Unit was successfully updated", "success");
 				} else {
 					alert("There was some error", "error");
 				}
+				await fetch("/api/revalidate");
 			});
 	};
 
