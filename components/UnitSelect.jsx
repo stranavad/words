@@ -10,7 +10,7 @@ import {
 	Box,
 	Button,
 } from "@mui/material";
-import { pickContrastColor } from "../utils/pickContrastColor.ts";
+import { pickContrastColor } from "../utils/pickContrastColor.js";
 
 const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 	const [open, setOpen] = useState(false);

@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
-//import Link from "next/link";
 import dynamic from "next/dynamic";
+const Link = dynamic(() => import("next/link"), { loading: () => <div /> });
 // MUI
 import { List, Stack, Button, Box, Fab, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 // custom components
-const Unit = dynamic(() => import("../components/Unit"), {
-	loading: () => <div />,
-});
-const Link = dynamic(() => import("next/link"), {
-	loading: () => <div />,
-});
+import Unit from "../components/Unit";
 // modules
 import axios from "axios";
 import { PATH } from "../config";
@@ -23,7 +18,7 @@ const Units = ({ alert, unitsProp }) => {
 	useEffect(() => loadData(), []);
 	const loadData = () => {
 		setDataLoading(true);
-		axios.get(`${PATH}units/detailed`).then(({data: {units}}) => {
+		axios.get(`${PATH}units/detailed`).then(({ data: { units } }) => {
 			setUnits(units);
 			setDataLoading(false);
 		});

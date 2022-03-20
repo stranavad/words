@@ -1,25 +1,16 @@
 /* eslint-disable @next/next/link-passhref */
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 // MUI
 import { Stack, Fab, Box, List, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { PATH } from "../config";
 // custom components
-const UnitSelect = dynamic(() => import("../components/UnitSelect"), {
-	loading: () => <div />,
-});
-const TogglePrimary = dynamic(() => import("../components/TogglePrimary"), {
-	loading: () => <div />,
-});
-const AdvancedMenu = dynamic(() => import("../components/AdvancedMenu"), {
-	loading: () => <div />,
-});
-const Word = dynamic(() => import("../components/Word"), {
-	loading: () => <div />,
-});
+import UnitSelect from "../components/UnitSelect";
+import TogglePrimary from "../components/TogglePrimary";
+import AdvancedMenu from "../components/AdvancedMenu";
+import Word from "../components/Word";
 // modules
 import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";

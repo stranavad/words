@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Chip, Stack } from "@mui/material";
 import { CirclePicker } from "react-color";
-import { pickContrastColor } from "../utils/pickContrastColor.ts";
+import { pickContrastColor } from "../utils/pickContrastColor.js";
 
 const PickColor = ({ color, setColor}) => {
 	const [open, setOpen] = useState(false);
