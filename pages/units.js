@@ -1,29 +1,39 @@
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+//import Link from "next/link";
+import dynamic from "next/dynamic";
 // MUI
-import { List, Stack, Button, Box, Fab } from "@mui/material";
+import { List, Stack, Button, Box, Fab, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 // custom components
-import Unit from "../components/Unit";
+const Unit = dynamic(() => import("../components/Unit"), {
+	loading: () => <div />,
+});
+const Link = dynamic(() => import("next/link"), {
+	loading: () => <div />,
+});
 // modules
 import axios from "axios";
 import { PATH } from "../config";
 
 const Units = ({ alert, unitsProp }) => {
 	const [units, setUnits] = useState(unitsProp);
+	const [dataLoading, setDataLoading] = useState(true);
 
-	const loadData = async () => {
-		const res = await fetch(`${PATH}units/detailed`);
-		const { units } = await res.json();
-		setUnits(units);
+	// get initial data
+	useEffect(() => loadData(), []);
+	const loadData = () => {
+		setDataLoading(true);
+		axios.get(`${PATH}units/detailed`).then(({data: {units}}) => {
+			setUnits(units);
+			setDataLoading(false);
+		});
 	};
 
 	// delete unit
 	const deleteUnit = (id) => {
-		axios.delete(`${PATH}units`, { params: { id } }).then(async () => {
+		axios.delete(`${PATH}units`, { params: { id } }).then(() => {
 			alert("Vymazano adios", "success");
 			loadData();
-			await fetch("/api/revalidate");
 		});
 	};
 
@@ -35,14 +45,13 @@ const Units = ({ alert, unitsProp }) => {
 				id: unit.id,
 				color: unit.color,
 			})
-			.then(async (res) => {
+			.then((res) => {
 				loadData();
 				if (res.data.message === "updated") {
 					alert("Unit was successfully updated", "success");
 				} else {
 					alert("There was some error", "error");
 				}
-				await fetch("/api/revalidate");
 			});
 	};
 
@@ -62,17 +71,22 @@ const Units = ({ alert, unitsProp }) => {
 					<Button variant="contained">Zpet</Button>
 				</Link>
 			</Stack>
-			<List sx={{ maxWidth: "400px", width: "100%" }}>
-				{units.map((unit) => (
-					<Unit
-						key={unit.id}
-						unit={unit}
-						units={units}
-						deleteUnit={deleteUnit}
-						updateUnit={updateUnit}
-					/>
-				))}
-			</List>
+			{!dataLoading ? (
+				<List sx={{ maxWidth: "400px", width: "100%" }}>
+					{units.map((unit) => (
+						<Unit
+							key={unit.id}
+							unit={unit}
+							units={units}
+							deleteUnit={deleteUnit}
+							updateUnit={updateUnit}
+						/>
+					))}
+				</List>
+			) : (
+				<CircularProgress />
+			)}
+
 			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
 				<Link href="/add" passHref>
 					<Fab color="primary">
@@ -85,9 +99,3 @@ const Units = ({ alert, unitsProp }) => {
 };
 
 export default Units;
-
-export async function getStaticProps() {
-	const res = await fetch(`${PATH}units`);
-	const { units } = await res.json();
-	return { props: { unitsProp: units }};
-}
