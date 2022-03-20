@@ -1,31 +1,38 @@
 /* eslint-disable @next/next/link-passhref */
 import { useEffect, useState } from "react";
-import Link from "next/link";
+//import Link from "next/link";
+import dynamic from "next/dynamic";
 // MUI
-import { Stack, Button, Tab, Tabs, Box, Typography } from "@mui/material";
+import { Stack, Button, Tab, Tabs, Box } from "@mui/material";
 // Custom components
-import AddWord from "../components/AddWord";
-import AddUnit from "../components/AddUnit";
-import TabPanel from "../components/TabPanel";
+const AddWord = dynamic(() => import("../components/AddWord"), {
+	loading: () => <div />,
+});
+const AddUnit = dynamic(() => import("../components/AddUnit"), {
+	loading: () => <div />,
+});
+const TabPanel = dynamic(() => import("../components/TabPanel"), {
+	loading: () => <div />,
+});
+const Link = dynamic(() => import("next/link"), {
+	loading: () => <div />,
+});
 import { PATH } from "../config";
 // Modules
 import axios from "axios";
 
-const Add = ({ alert, wordsProp, unitsProp }) => {
-	const [words, setWords] = useState(wordsProp);
-	const [units, setUnits] = useState(unitsProp);
+const Add = ({ alert }) => {
+	const [words, setWords] = useState([]);
+	const [units, setUnits] = useState([]);
 	const [tab, setTab] = useState(0);
 
 	// get initial data
-	const loadWords = async () => {
-		const res = await fetch(`${PATH}words`);
-		const { words } = await res.json();
-		setWords(words);
-	};
-	const loadUnits = async () => {
-		const res = await fetch(`${PATH}units`);
-		const { units } = await res.json();
-		setUnits(units);
+	useEffect(() => loadData(), []);
+	const loadData = () => {
+		axios.get(`${PATH}utils/initial`).then(({ data: { words, units } }) => {
+			setWords(words);
+			setUnits(units);
+		});
 	};
 
 	const addWord = (word) => {
@@ -35,10 +42,9 @@ const Add = ({ alert, wordsProp, unitsProp }) => {
 				cz: word.cz.replace('"', "'"),
 				en: word.en.replace('"', "'"),
 			})
-			.then(async () => {
+			.then(() => {
 				alert("Vytvoreno nove slovo", "success");
-				loadWords();
-				await fetch("/api/revalidate");
+				loadData();
 			});
 	};
 
@@ -48,10 +54,9 @@ const Add = ({ alert, wordsProp, unitsProp }) => {
 			.post(`${PATH}units`, {
 				unit,
 			})
-			.then(async () => {
+			.then(() => {
 				alert("New unit created", "success");
-				loadUnits();
-				await fetch("/api/revalidate");
+				loadData();
 			});
 	};
 
@@ -106,9 +111,3 @@ const Add = ({ alert, wordsProp, unitsProp }) => {
 };
 
 export default Add;
-
-export async function getStaticProps() {
-	const res = await fetch(`${PATH}utils/initial`);
-	const { units, words } = await res.json();
-	return { props: { unitsProp: units, wordsProp: words }};
-}
