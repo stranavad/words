@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import dynamic from "next/dynamic";
+const Link = dynamic(() => import("next/link"), { loading: () => <div /> });
 // mui
 import {
 	ListItem,
@@ -18,7 +19,7 @@ const Unit = ({ unit, deleteUnit, updateUnit, units }) => {
 	const [showEdit, setShowEdit] = useState(false);
 
 	useEffect(() => {
-		console.log('rerunning use effect');
+		console.log("rerunning use effect");
 		setUpdatedUnit(unit);
 	}, [unit]);
 
