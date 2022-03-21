@@ -4,12 +4,19 @@ import dynamic from "next/dynamic";
 // MUI
 import { Stack, Button, Tab, Tabs, Box } from "@mui/material";
 // Custom components
-const AddWord = dynamic(() => import('../components/AddWord'), { loading: () => <div /> });
-const AddUnit = dynamic(() => import('../components/AddUnit'), { loading: () => <div /> });
-const TabPanel = dynamic(() => import('../components/TabPanel'), { loading: () => <div /> });
+const AddWord = dynamic(() => import("../components/AddWord"), {
+	loading: () => <div />,
+});
+const AddUnit = dynamic(() => import("../components/AddUnit"), {
+	loading: () => <div />,
+});
+const TabPanel = dynamic(() => import("../components/TabPanel"), {
+	loading: () => <div />,
+});
 const Link = dynamic(() => import("next/link"), {
 	loading: () => <div />,
 });
+import ButtonHome from "../components/ButtonHome";
 import { PATH } from "../config";
 // Modules
 import axios from "axios";
@@ -71,9 +78,7 @@ const Add = ({ alert }) => {
 						flexDirection: "row",
 					}}
 				>
-					<Link href="/" passHref>
-						<Button variant="contained">Home</Button>
-					</Link>
+					<ButtonHome />
 				</Stack>
 				<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 					<Tabs

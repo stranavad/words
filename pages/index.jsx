@@ -1,16 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 // MUI
-import { Stack, Fab, Box, List, CircularProgress } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Stack, List, CircularProgress } from "@mui/material";
 import { PATH } from "../config";
 // custom components
 import UnitSelect from "../components/UnitSelect";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
+import ButtonAdd from "../components/ButtonAdd";
 //import Word from "../components/Word";
 const Word = dynamic(() => import("../components/Word"));
 // modules
@@ -24,7 +23,7 @@ export default function Index({ alert }) {
 	const [units, setUnits] = useState([]);
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [primary, setPrimary] = useState("en");
-	const [showGlobal, setShowGlobal] = useState(false);
+	const [showGlobal, setShowGlobal] = useState(true);
 	const [dataLoading, setDataLoading] = useState(true);
 
 	const { query, replace } = useRouter();
@@ -172,13 +171,7 @@ export default function Index({ alert }) {
 			) : (
 				<CircularProgress />
 			)}
-			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
-				<Link href="/add" passHref>
-					<Fab color="primary">
-						<Add />
-					</Fab>
-				</Link>
-			</Box>
+			<ButtonAdd />
 		</>
 	);
 }
