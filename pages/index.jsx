@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import { useRouter } from "next/router";
 // MUI
 import { Stack, Fab, Box, List, CircularProgress } from "@mui/material";
@@ -10,7 +11,8 @@ import { PATH } from "../config";
 import UnitSelect from "../components/UnitSelect";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
-import Word from "../components/Word";
+//import Word from "../components/Word";
+const Word = dynamic(() => import('../components/Word'));
 // modules
 import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";

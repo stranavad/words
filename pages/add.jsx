@@ -4,9 +4,9 @@ import dynamic from "next/dynamic";
 // MUI
 import { Stack, Button, Tab, Tabs, Box } from "@mui/material";
 // Custom components
-import AddWord from "../components/AddWord";
-import AddUnit from "../components/AddUnit";
-import TabPanel from "../components/TabPanel";
+const AddWord = dynamic(() => import('../components/AddWord'), { loading: () => <div /> });
+const AddUnit = dynamic(() => import('../components/AddUnit'), { loading: () => <div /> });
+const TabPanel = dynamic(() => import('../components/TabPanel'), { loading: () => <div /> });
 const Link = dynamic(() => import("next/link"), {
 	loading: () => <div />,
 });
