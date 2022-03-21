@@ -21,7 +21,7 @@ import {
 
 
 const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
-	const [show, setShow] = useState(false);
+	const [show, setShow] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [showEdit, setShowEdit] = useState(false);
 	const [updatedWord, setUpdatedWord] = useState({});
@@ -115,8 +115,8 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 							<IconButton
 								color="success"
 								onClick={() => {
-									updateWord(updatedWord);
 									setShowEdit(false);
+									updateWord(updatedWord);
 								}}
 							>
 								<Check />

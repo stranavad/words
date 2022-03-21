@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-const Link = dynamic(() => import("next/link"), { loading: () => <div /> });
 // MUI
-import { List, Stack, Button, Box, Fab, CircularProgress } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { List, Stack, CircularProgress } from "@mui/material";
 // custom components
 const Unit = dynamic(() => import('../components/Unit'));
+import ButtonHome from '../components/ButtonHome';
+import ButtonAdd from '../components/ButtonAdd';
 // import Unit from "../components/Unit";
 // modules
 import axios from "axios";
@@ -62,9 +62,7 @@ const Units = ({ alert, unitsProp }) => {
 					flexDirection: "row",
 				}}
 			>
-				<Link href="/" passHref>
-					<Button variant="contained">Zpet</Button>
-				</Link>
+				<ButtonHome/>
 			</Stack>
 			{!dataLoading ? (
 				<List sx={{ maxWidth: "400px", width: "100%" }}>
@@ -82,13 +80,7 @@ const Units = ({ alert, unitsProp }) => {
 				<CircularProgress />
 			)}
 
-			<Box sx={{ position: "fixed", bottom: 30, right: 30 }}>
-				<Link href="/add" passHref>
-					<Fab color="primary">
-						<Add />
-					</Fab>
-				</Link>
-			</Box>
+			<ButtonAdd/>
 		</>
 	);
 };
