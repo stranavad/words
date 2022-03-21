@@ -17,7 +17,6 @@ const Units = ({ alert, unitsProp }) => {
 	// get initial data
 	useEffect(() => loadData(), []);
 	const loadData = () => {
-		setDataLoading(true);
 		axios.get(`${PATH}units/detailed`).then(({ data: { units } }) => {
 			setUnits(units);
 			setDataLoading(false);

@@ -86,11 +86,7 @@ const Add = ({ alert }) => {
 					</Tabs>
 				</Box>
 				<TabPanel value={tab} index={0}>
-					<AddWord
-						words={words}
-						addWord={addWord}
-						units={units.map((u) => u.name)}
-					/>
+					<AddWord words={words} addWord={addWord} units={units} />
 				</TabPanel>
 				<TabPanel value={tab} index={1}>
 					<AddUnit
