@@ -115,8 +115,8 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 							<IconButton
 								color="success"
 								onClick={() => {
-									updateWord(updatedWord);
 									setShowEdit(false);
+									updateWord(updatedWord);
 								}}
 							>
 								<Check />

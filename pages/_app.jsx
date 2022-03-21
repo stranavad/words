@@ -21,6 +21,7 @@ const App = ({ Component, pageProps }) => {
 		setAlertText(text);
 		setAlertSeverity(severity);
 		setAlertShow(true);
+		setTimeout(() => setAlertShow(false), 2000);
 	};
 
 	return (

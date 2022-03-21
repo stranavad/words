@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 // MUI
 import { Stack, Fab, Box, List, CircularProgress } from "@mui/material";
@@ -12,7 +12,7 @@ import UnitSelect from "../components/UnitSelect";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
 //import Word from "../components/Word";
-const Word = dynamic(() => import('../components/Word'));
+const Word = dynamic(() => import("../components/Word"));
 // modules
 import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";
@@ -49,7 +49,6 @@ export default function Index({ alert }) {
 				alert("Slovo upraveno", "success");
 			}
 		});
-		e;
 	};
 
 	const copyToClipboard = () => {
