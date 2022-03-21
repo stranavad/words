@@ -5,7 +5,8 @@ const Link = dynamic(() => import("next/link"), { loading: () => <div /> });
 import { List, Stack, Button, Box, Fab, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 // custom components
-import Unit from "../components/Unit";
+const Unit = dynamic(() => import('../components/Unit'));
+// import Unit from "../components/Unit";
 // modules
 import axios from "axios";
 import { PATH } from "../config";
@@ -17,7 +18,6 @@ const Units = ({ alert, unitsProp }) => {
 	// get initial data
 	useEffect(() => loadData(), []);
 	const loadData = () => {
-		setDataLoading(true);
 		axios.get(`${PATH}units/detailed`).then(({ data: { units } }) => {
 			setUnits(units);
 			setDataLoading(false);

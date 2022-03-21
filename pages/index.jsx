@@ -1,6 +1,7 @@
-/* eslint-disable @next/next/link-passhref */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from 'next/dynamic';
 import { useRouter } from "next/router";
 // MUI
 import { Stack, Fab, Box, List, CircularProgress } from "@mui/material";
@@ -10,7 +11,8 @@ import { PATH } from "../config";
 import UnitSelect from "../components/UnitSelect";
 import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
-import Word from "../components/Word";
+//import Word from "../components/Word";
+const Word = dynamic(() => import('../components/Word'));
 // modules
 import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";
@@ -30,18 +32,24 @@ export default function Index({ alert }) {
 		axios.delete(`${PATH}words`, { params: { id } }).then(loadData);
 
 	const updateWord = (word) => {
-		axios
-			.put(`${PATH}words`, {
+		fetch(`${PATH}words`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
 				id: word.id,
 				cz: word.cz.replace('"', "'"),
 				en: word.en.replace('"', "'"),
-			})
-			.then((res) => {
-				loadData();
-				if (res.data.message === "updated") {
-					alert("Slovo upraveno", "success");
-				}
-			});
+			}),
+		}).then(async (res) => {
+			loadData();
+			const data = await res.json();
+			if (data.message === "updated") {
+				alert("Slovo upraveno", "success");
+			}
+		});
+		e;
 	};
 
 	const copyToClipboard = () => {
@@ -83,7 +91,6 @@ export default function Index({ alert }) {
 	useEffect(() => loadData(), []);
 
 	const loadData = () => {
-		setDataLoading(true);
 		axios.get(`${PATH}utils/initial`).then(({ data: { words, units } }) => {
 			setOriginalWords(words);
 			setUnits(units);
@@ -101,7 +108,7 @@ export default function Index({ alert }) {
 			setActiveUnit(units.filter((u) => active.includes(u.id))); // removing duplicated
 			replace("/", undefined, { shallow: true }); // removing query
 		}
-	}, [query?.activeUnit, replace, units]);
+	}, [query?.activeUnit, units]);
 
 	// change Primary language
 	useEffect(() => {

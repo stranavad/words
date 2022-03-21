@@ -38,7 +38,7 @@ const AddUnit = ({ addUnit, units }) => {
 				color={unit.color}
 				setColor={(c) => setUnit((u) => ({ ...u, color: c }))}
 			/>
-			{!units.includes(unit) && unit?.name?.trim() !== "" && (
+			{!units.includes(unit.name) && unit?.name?.trim() !== "" && (
 				<Button type="submit" variant="contained" color="primary">
 					Pridat
 				</Button>
