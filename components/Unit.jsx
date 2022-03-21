@@ -12,14 +12,14 @@ import {
 	Stack,
 } from "@mui/material";
 import { Delete, Close, Edit, Check } from "@mui/icons-material";
-import PickColor from "./PickColor";
+const PickColor = dynamic(() => import('./PickColor'));
+//import PickColor from "./PickColor";
 
 const Unit = ({ unit, deleteUnit, updateUnit, units }) => {
 	const [updatedUnit, setUpdatedUnit] = useState({});
 	const [showEdit, setShowEdit] = useState(false);
 
 	useEffect(() => {
-		console.log("rerunning use effect");
 		setUpdatedUnit(unit);
 	}, [unit]);
 

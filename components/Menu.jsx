@@ -10,7 +10,7 @@ const Menu = () => {
 						component="div"
 						sx={{ flexGrow: 1 }}
 					>
-						Okackovana
+						Lengeda Jezek
 					</Typography>
 				</Toolbar>
 			</AppBar>

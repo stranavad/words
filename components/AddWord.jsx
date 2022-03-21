@@ -15,7 +15,7 @@ import { PATH } from '../config';
 const AddWord = ({ addWord, units }) => {
 	const [cz, setCz] = useState("");
 	const [en, setEn] = useState("");
-	const [unit, setUnit] = useState("");
+	const [unit, setUnit] = useState({});
 	// utils
 	const [showCreate, setShowCreate] = useState(false);
 	// errors
@@ -25,7 +25,7 @@ const AddWord = ({ addWord, units }) => {
 	const clear = () => {
 		setCz("");
 		setEn("");
-		setUnit("");
+		setUnit({});
 		setCzExists(false);
 		setEnExists(false);
 		setShowCreate(false);
@@ -36,7 +36,7 @@ const AddWord = ({ addWord, units }) => {
 		if (unit) {
 			axios
 				.get(`${PATH}units/words`, {
-					params: { cz, en, unit },
+					params: { cz, en, unit: unit.id },
 				})
 				.then(({ data: { czExists: czRes, enExists: enRes } }) => {
 					setCzExists(czRes);
@@ -47,7 +47,7 @@ const AddWord = ({ addWord, units }) => {
 
 	// set show submit button
 	useEffect(() => {
-		if (czExists || enExists || cz === "" || en === "" || unit === "") {
+		if (czExists || enExists || cz.trim() === "" || en.trim() === "" || unit === {} ) {
 			setShowCreate(false);
 		} else {
 			setShowCreate(true);
@@ -60,7 +60,7 @@ const AddWord = ({ addWord, units }) => {
 			component="form"
 			onSubmit={(e) => {
 				e.preventDefault();
-				showCreate && addWord({ cz, en, unit });
+				showCreate && addWord({ cz, en, unit: unit.id });
 				showCreate && clear();
 			}}
 		>
@@ -95,8 +95,8 @@ const AddWord = ({ addWord, units }) => {
 					onChange={(e) => setUnit(e.target.value)}
 				>
 					{units.map((unit) => (
-						<MenuItem key={unit} value={unit}>
-							{unit}
+						<MenuItem key={unit.id} value={unit}>
+							{unit.name}
 						</MenuItem>
 					))}
 				</Select>
