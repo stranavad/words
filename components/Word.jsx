@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import {
 	ListItem,
@@ -7,7 +8,6 @@ import {
 	Popover,
 	Button,
 	Stack,
-	TextField,
 	Divider,
 } from "@mui/material";
 import {
@@ -18,15 +18,59 @@ import {
 	Check,
 	Close,
 } from "@mui/icons-material";
+import WordForm from "./WordForm";
+import axios from 'axios';2
+import { PATH } from "../config";
 
-
-const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
+const Word = ({
+	word,
+	showGlobal,
+	speak,
+	primary,
+	units,
+	loadData,
+	alert,
+}) => {
 	const [show, setShow] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [showEdit, setShowEdit] = useState(false);
 	const [updatedWord, setUpdatedWord] = useState({});
+	const [showUpdate, setShowUpdate] = useState(false);
 
-	useEffect(() => setUpdatedWord(word), [word]);
+	const updateWord = (word) => {
+		fetch(`${PATH}words`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				id: word.id,
+				cz: word.cz.replace('"', "'"),
+				en: word.en.replace('"', "'"),
+				unit: word.unit.id,
+			}),
+		}).then(async (res) => {
+			loadData();
+			const data = await res.json();
+			if (data.message === "updated") {
+				alert("Slovo upraveno", "success");
+			}
+		});
+	};
+
+	const deleteWord = () =>
+		axios
+			.delete(`${PATH}words`, { params: { id: word.id } })
+			.then(loadData);
+
+	useEffect(
+		() =>
+			setUpdatedWord({
+				...word,
+				unit: units.find((u) => u.id === word.unit),
+			}),
+		[word]
+	);
 
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -85,7 +129,7 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 								<Button
 									variant="container"
 									endIcon={<Delete color="error" />}
-									onClick={() => deleteWord(word.id)}
+									onClick={deleteWord}
 								>
 									Delete
 								</Button>
@@ -99,7 +143,6 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 					onClick={() => setShow((old) => !old)}
 					primary={word.primary}
 					secondary={show ? word.secondary : hashedWord}
-					// primaryTypographyProps={{color: 'green'}}
 					sx={{ cursor: "pointer" }}
 				/>
 			</ListItem>
@@ -111,17 +154,16 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 				key={word.id}
 				secondaryAction={
 					<Container disableGutters={true}>
-						{updatedWord.cz !== "" && updatedWord.en !== "" && (
-							<IconButton
-								color="success"
-								onClick={() => {
-									setShowEdit(false);
-									updateWord(updatedWord);
-								}}
-							>
-								<Check />
-							</IconButton>
-						)}
+						<IconButton
+							color="success"
+							onClick={() => {
+								setShowEdit(false);
+								updateWord(updatedWord);
+							}}
+							disabled={!showUpdate}
+						>
+							<Check />
+						</IconButton>
 						<IconButton
 							color="error"
 							onClick={() => {
@@ -135,32 +177,13 @@ const Word = ({ word, deleteWord, showGlobal, speak, primary, updateWord }) => {
 				}
 				sx={{ width: "100%" }}
 			>
-				<Stack>
-					<TextField
-						variant="outlined"
-						label="Cz"
-						value={updatedWord.cz}
-						onChange={(e) =>
-							setUpdatedWord((w) => ({
-								...w,
-								cz: e.target.value,
-							}))
-						}
-						sx={{ mb: 2 }}
-					/>
-					<TextField
-						variant="outlined"
-						label="En"
-						value={updatedWord.en}
-						onChange={(e) =>
-							setUpdatedWord((w) => ({
-								...w,
-								en: e.target.value,
-							}))
-						}
-						sx={{ mb: 2 }}
-					/>
-				</Stack>
+				<WordForm
+					word={updatedWord}
+					setWord={setUpdatedWord}
+					units={units}
+					setShowAdd={setShowUpdate}
+					originalWord={word}
+				/>
 			</ListItem>
 			<Divider />
 		</>

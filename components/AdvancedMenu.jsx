@@ -1,6 +1,5 @@
 import { Box, IconButton, Button, Container } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const AdvancedMenu = ({ showGlobal, setShowGlobal, copyToClipboard, exportWords, shareLink }) => {
 	return (

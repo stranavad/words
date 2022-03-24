@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 // MUI
 import { Stack, List, CircularProgress } from "@mui/material";
@@ -11,7 +10,7 @@ import TogglePrimary from "../components/TogglePrimary";
 import AdvancedMenu from "../components/AdvancedMenu";
 import ButtonAdd from "../components/ButtonAdd";
 //import Word from "../components/Word";
-const Word = dynamic(() => import("../components/Word"));
+import Word from "../components/Word";
 // modules
 import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";
@@ -27,28 +26,6 @@ export default function Index({ alert }) {
 	const [dataLoading, setDataLoading] = useState(true);
 
 	const { query, replace } = useRouter();
-	const deleteWord = (id) =>
-		axios.delete(`${PATH}words`, { params: { id } }).then(loadData);
-
-	const updateWord = (word) => {
-		fetch(`${PATH}words`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				id: word.id,
-				cz: word.cz.replace('"', "'"),
-				en: word.en.replace('"', "'"),
-			}),
-		}).then(async (res) => {
-			loadData();
-			const data = await res.json();
-			if (data.message === "updated") {
-				alert("Slovo upraveno", "success");
-			}
-		});
-	};
 
 	const copyToClipboard = () => {
 		axios
@@ -92,10 +69,17 @@ export default function Index({ alert }) {
 		axios.get(`${PATH}utils/initial`).then(({ data: { words, units } }) => {
 			setOriginalWords(words);
 			setUnits(units);
+			setActiveUnit(
+				units.filter((u) =>
+					activeUnit.map((au) => au.id).includes(u.id)
+				)
+			);
 			setDataLoading(false);
 		});
 	};
 
+	// TODO
+	// FIX
 	// watch for query change
 	useEffect(() => {
 		if (query?.activeUnit) {
@@ -157,14 +141,14 @@ export default function Index({ alert }) {
 				<List sx={{ maxWidth: "400px", width: "100%" }}>
 					{words.map((word) => (
 						<Word
+							alert={alert}
 							key={word.id}
 							word={word}
-							deleteWord={deleteWord}
 							showGlobal={showGlobal}
 							speak={speakWord}
 							primary={primary}
-							triggerReload={loadData}
-							updateWord={updateWord}
+							loadData={loadData}
+							units={units}
 						/>
 					))}
 				</List>
