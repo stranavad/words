@@ -1,21 +1,10 @@
-/* eslint-disable @next/next/link-passhref */
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 // MUI
-import { Stack, Button, Tab, Tabs, Box } from "@mui/material";
+import { Stack, Tab, Tabs, Box } from "@mui/material";
 // Custom components
-const AddWord = dynamic(() => import("../components/AddWord"), {
-	loading: () => <div />,
-});
-const AddUnit = dynamic(() => import("../components/AddUnit"), {
-	loading: () => <div />,
-});
-const TabPanel = dynamic(() => import("../components/TabPanel"), {
-	loading: () => <div />,
-});
-const Link = dynamic(() => import("next/link"), {
-	loading: () => <div />,
-});
+import AddWord from "../components/AddWord";
+import AddUnit from "../components/AddUnit";
+import TabPanel from "../components/TabPanel";
 import ButtonHome from "../components/ButtonHome";
 import { PATH } from "../config";
 // Modules
@@ -33,31 +22,6 @@ const Add = ({ alert }) => {
 			setWords(words);
 			setUnits(units);
 		});
-	};
-
-	const addWord = (word) => {
-		axios
-			.post(`${PATH}words`, {
-				...word,
-				cz: word.cz.replace('"', "'"),
-				en: word.en.replace('"', "'"),
-			})
-			.then(() => {
-				alert("Vytvoreno nove slovo", "success");
-				loadData();
-			});
-	};
-
-	const addUnit = (unit) => {
-		console.log("adding unit");
-		axios
-			.post(`${PATH}units`, {
-				unit,
-			})
-			.then(() => {
-				alert("New unit created", "success");
-				loadData();
-			});
 	};
 
 	// generating props for tabs
@@ -91,12 +55,18 @@ const Add = ({ alert }) => {
 					</Tabs>
 				</Box>
 				<TabPanel value={tab} index={0}>
-					<AddWord words={words} addWord={addWord} units={units} />
+					<AddWord
+						words={words}
+						units={units}
+						loadData={loadData}
+						alert={alert}
+					/>
 				</TabPanel>
 				<TabPanel value={tab} index={1}>
 					<AddUnit
 						units={units.map((u) => u.name)}
-						addUnit={addUnit}
+						alert={alert}
+						loadData={loadData}
 					/>
 				</TabPanel>
 			</Stack>

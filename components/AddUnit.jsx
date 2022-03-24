@@ -1,9 +1,22 @@
 import { useState } from "react";
 import { Stack, TextField, Button, Typography } from "@mui/material";
 import PickColor from "./PickColor";
+import axios from "axios";
+import { PATH } from "../config";
 
-const AddUnit = ({ addUnit, units }) => {
+const AddUnit = ({ units, alert, loadData }) => {
 	const [unit, setUnit] = useState({ color: "#1976d2", name: "" });
+
+	const addUnit = (unit) => {
+		axios
+			.post(`${PATH}units`, {
+				unit,
+			})
+			.then(() => {
+				alert("New unit created", "success");
+				loadData();
+			});
+	};
 
 	return (
 		<Stack

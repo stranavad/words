@@ -1,16 +1,11 @@
 import { useState } from "react";
 import Head from "next/head";
-import dynamic from 'next/dynamic';
 import "../styles.css";
 // Custom components
-const Menu = dynamic(() => import('../components/Menu'));
-//import Menu from "../components/Menu";
-const AlertBar = dynamic(() => import('../components/AlertBar'), {loading: () => <div/>})
-//import AlertBar from "../components/AlertBar";
+import Menu from "../components/Menu";
+import AlertBar from '../components/AlertBar';
 // MUI
-//import Stack from '@mui/material/Stack';
-const Stack = dynamic(() => import('@mui/material/Stack'));
-//import { Stack } from "@mui/material";
+import { Stack } from '@mui/material';
 
 const App = ({ Component, pageProps }) => {
 	const [alertText, setAlertText] = useState(false);
