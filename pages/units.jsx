@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 // MUI
 import { List, Stack, CircularProgress } from "@mui/material";
 // custom components
-const Unit = dynamic(() => import('../components/Unit'));
+import Unit from '../components/Unit';
 import ButtonHome from '../components/ButtonHome';
 import ButtonAdd from '../components/ButtonAdd';
 // import Unit from "../components/Unit";

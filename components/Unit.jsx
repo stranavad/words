@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { Delete, Close, Edit, Check } from "@mui/icons-material";
 const PickColor = dynamic(() => import('./PickColor'));
-//import PickColor from "./PickColor";
 
 const Unit = ({ unit, deleteUnit, updateUnit, units }) => {
 	const [updatedUnit, setUpdatedUnit] = useState({});

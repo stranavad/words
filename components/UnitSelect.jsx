@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
 	FormControl,
@@ -14,6 +15,7 @@ import { pickContrastColor } from "../utils/pickContrastColor.js";
 
 const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 	const [open, setOpen] = useState(false);
+
 	return (
 		<FormControl sx={{ m: 1, width: "70%" }}>
 			<InputLabel id="chip">Unit</InputLabel>
@@ -22,9 +24,7 @@ const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
 				open={open}
 				multiple
 				value={activeUnit}
-				onChange={({ target: { value } }) => 
-					setActiveUnit(value)
-				}
+				onChange={({ target: { value } }) => setActiveUnit(value)}
 				onClick={() => setOpen((op) => !op)}
 				input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
 				renderValue={(selected) => (
