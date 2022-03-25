@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 // MUI
-import { Stack, List, CircularProgress } from "@mui/material";
+import { Stack, List } from "@mui/material";
 import { PATH } from "../config";
 // custom components
 import UnitSelect from "../components/UnitSelect";
@@ -16,14 +16,13 @@ import axios from "axios";
 import { useSpeechSynthesis } from "react-speech-kit";
 import fileDownload from "js-file-download";
 
-export default function Index({ alert }) {
-	const [words, setWords] = useState([]);
-	const [originalWords, setOriginalWords] = useState([]);
-	const [units, setUnits] = useState([]);
+export default function Index({ alert, wordsProp, unitsProp }) {
+	const [words, setWords] = useState(wordsProp);
+	const [originalWords, setOriginalWords] = useState(wordsProp);
+	const [units, setUnits] = useState(unitsProp);
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [primary, setPrimary] = useState("en");
 	const [showGlobal, setShowGlobal] = useState(true);
-	const [dataLoading, setDataLoading] = useState(true);
 
 	const { query, replace } = useRouter();
 
@@ -74,7 +73,6 @@ export default function Index({ alert }) {
 					activeUnit.map((au) => au.id).includes(u.id)
 				)
 			);
-			setDataLoading(false);
 		});
 	};
 
@@ -137,25 +135,33 @@ export default function Index({ alert }) {
 				shareLink={shareLink}
 				exportWords={exportWords}
 			/>
-			{!dataLoading ? (
-				<List sx={{ maxWidth: "400px", width: "100%" }}>
-					{words.map((word) => (
-						<Word
-							alert={alert}
-							key={word.id}
-							word={word}
-							showGlobal={showGlobal}
-							speak={speakWord}
-							primary={primary}
-							loadData={loadData}
-							units={units}
-						/>
-					))}
-				</List>
-			) : (
-				<CircularProgress />
-			)}
+			<List sx={{ maxWidth: "400px", width: "100%" }}>
+				{words.map((word) => (
+					<Word
+						alert={alert}
+						key={word.id}
+						word={word}
+						showGlobal={showGlobal}
+						speak={speakWord}
+						primary={primary}
+						loadData={loadData}
+						units={units}
+					/>
+				))}
+			</List>
 			<ButtonAdd />
 		</>
 	);
+}
+
+export async function getStaticProps() {
+	const res = await axios.get(`${PATH}utils/initial`);
+	const { data } = await res;
+	return {
+		props: {
+			wordsProp: data.words,
+			unitsProp: data.units,
+		},
+		revalidate: 30,
+	};
 }

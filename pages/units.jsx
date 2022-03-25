@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 // MUI
-import { List, Stack, CircularProgress } from "@mui/material";
+import { List, Stack } from "@mui/material";
 // custom components
-import Unit from '../components/Unit';
-import ButtonHome from '../components/ButtonHome';
-import ButtonAdd from '../components/ButtonAdd';
+import Unit from "../components/Unit";
+import ButtonHome from "../components/ButtonHome";
+import ButtonAdd from "../components/ButtonAdd";
 // import Unit from "../components/Unit";
 // modules
 import axios from "axios";
@@ -12,14 +12,12 @@ import { PATH } from "../config";
 
 const Units = ({ alert, unitsProp }) => {
 	const [units, setUnits] = useState(unitsProp);
-	const [dataLoading, setDataLoading] = useState(true);
 
 	// get initial data
 	useEffect(() => loadData(), []);
 	const loadData = () => {
 		axios.get(`${PATH}units/detailed`).then(({ data: { units } }) => {
 			setUnits(units);
-			setDataLoading(false);
 		});
 	};
 
@@ -61,27 +59,34 @@ const Units = ({ alert, unitsProp }) => {
 					flexDirection: "row",
 				}}
 			>
-				<ButtonHome/>
+				<ButtonHome />
 			</Stack>
-			{!dataLoading ? (
-				<List sx={{ maxWidth: "400px", width: "100%" }}>
-					{units.map((unit) => (
-						<Unit
-							key={unit.id}
-							unit={unit}
-							units={units}
-							deleteUnit={deleteUnit}
-							updateUnit={updateUnit}
-						/>
-					))}
-				</List>
-			) : (
-				<CircularProgress />
-			)}
+			<List sx={{ maxWidth: "400px", width: "100%" }}>
+				{units.map((unit) => (
+					<Unit
+						key={unit.id}
+						unit={unit}
+						units={units}
+						deleteUnit={deleteUnit}
+						updateUnit={updateUnit}
+					/>
+				))}
+			</List>
 
-			<ButtonAdd/>
+			<ButtonAdd />
 		</>
 	);
 };
 
 export default Units;
+
+export async function getStaticProps() {
+	const res = await axios.get(`${PATH}units/detailed`);
+	const { units } = await res.data;
+	return {
+		props: {
+			unitsProp: units,
+		},
+		revalidate: 30,
+	};
+}
