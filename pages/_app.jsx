@@ -3,9 +3,9 @@ import Head from "next/head";
 import "../styles.css";
 // Custom components
 import Menu from "../components/Menu";
-import AlertBar from '../components/AlertBar';
+import AlertBar from "../components/AlertBar";
 // MUI
-import { Stack } from '@mui/material';
+import { Stack } from "@mui/material";
 
 const App = ({ Component, pageProps }) => {
 	const [alertText, setAlertText] = useState(false);
@@ -21,6 +21,9 @@ const App = ({ Component, pageProps }) => {
 
 	return (
 		<>
+			<Head>
+				<title>Fajne slova</title>
+			</Head>
 			<Menu />
 			<Stack alignItems="center">
 				<Head>

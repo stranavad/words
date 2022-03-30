@@ -9,6 +9,7 @@ import {
 	Button,
 	Stack,
 	Divider,
+	Box
 } from "@mui/material";
 import {
 	Edit,
@@ -143,7 +144,13 @@ const Word = ({
 					onClick={() => setShow((old) => !old)}
 					primary={word.primary}
 					secondary={show ? word.secondary : hashedWord}
-					sx={{ cursor: "pointer" }}
+					sx={{
+						cursor: "pointer",
+						borderLeftWidth: "2px",
+						borderLeftColor: units.find((u) => u.id === word.unit).color,
+						borderLeftStyle: "solid",
+						paddingLeft: "5px",
+					}}
 				/>
 			</ListItem>
 			<Divider />
