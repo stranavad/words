@@ -76,8 +76,6 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 		});
 	};
 
-	// TODO
-	// FIX
 	// watch for query change
 	useEffect(() => {
 		if (query?.activeUnit) {
