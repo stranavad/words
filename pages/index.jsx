@@ -55,10 +55,10 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 	};
 
 	// speaking
-	const { speak, speaking, cancel } = useSpeechSynthesis();
+	const { speak, speaking, cancel, voices } = useSpeechSynthesis();
 	const speakWord = (text) => {
 		speaking && cancel();
-		speak({ text });
+		speak({ text, voice: voices[0] });
 	};
 
 	// initial data
