@@ -30,7 +30,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: send message
-      - name: send message
         uses: appleboy/discord-action@master
         with:
           webhook_id: ${{ secrets.WEBHOOK_ID }}
