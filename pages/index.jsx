@@ -59,6 +59,7 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 	const speakWord = (text) => {
 		speaking && cancel();
 		const voice = voices.find((vc) => vc.lang === "en-US");
+		alert(voice.lang, 'success');
 		speak({ text, voice: voice || voices[0] });
 	};
 
