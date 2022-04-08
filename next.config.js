@@ -4,4 +4,9 @@ const nextConfig = {
   type: "module",
 }
 
-module.exports = nextConfig
+module.exports = {
+	nextConfig,
+	experimental: {
+		outputStandalone: true,
+	},
+};
