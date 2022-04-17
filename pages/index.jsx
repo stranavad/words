@@ -161,6 +161,6 @@ export async function getStaticProps() {
 			wordsProp: data.words,
 			unitsProp: data.units,
 		},
-		revalidate: 30,
+		revalidate: 60,
 	};
 }
