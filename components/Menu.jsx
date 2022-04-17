@@ -1,8 +1,10 @@
-import { Box, AppBar, Typography, Toolbar } from "@mui/material";
+import dynamic from 'next/dynamic';
+const Link = dynamic(() => import('next/link'));
+import { Box, AppBar, Typography, Toolbar, Button } from "@mui/material";
 
 const Menu = () => {
 	return (
-		<Box sx={{ flexGrow: 1, mb: 4}}>
+		<Box sx={{ flexGrow: 1, mb: 4 }}>
 			<AppBar position="static">
 				<Toolbar>
 					<Typography
@@ -12,6 +14,13 @@ const Menu = () => {
 					>
 						Lengeda Jezek
 					</Typography>
+					<Link href="/learning" passHref>
+						<Button>
+							<Typography variant="button" color="white">
+								Learning
+							</Typography>
+						</Button>
+					</Link>
 				</Toolbar>
 			</AppBar>
 		</Box>

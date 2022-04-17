@@ -6,7 +6,7 @@ const nextConfig = {
 
 module.exports = {
 	nextConfig,
-	experimental: {
-		outputStandalone: true,
-	},
+	// experimental: {
+	// 	outputStandalone: true,
+	// },
 };

@@ -13,11 +13,11 @@ import {
 } from "@mui/material";
 import { pickContrastColor } from "../utils/pickContrastColor.js";
 
-const UnitSelect = ({ units, activeUnit, setActiveUnit }) => {
+const UnitSelect = ({ units, activeUnit, setActiveUnit, fullWidth }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<FormControl sx={{ m: 1, width: "70%" }}>
+		<FormControl sx={{ m: 1, width: fullWidth ? '100%' : '70%' }}>
 			<InputLabel id="chip">Unit</InputLabel>
 			<Select
 				labelId="chip"
