@@ -23,7 +23,7 @@ jobs:
         run: echo running on branch ${GITHUB_REF##*/}
           
       - name: Pull Code
-        run: git pull origin ${{GITHUB_REF##*/}}
+        run: git pull origin ${GITHUB_REF##*/}
 
       - name: Lint Code Base
         uses: github/super-linter@v4
