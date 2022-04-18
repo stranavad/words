@@ -19,8 +19,11 @@ jobs:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
           
+      - name: Branch name
+        run: echo running on branch ${GITHUB_REF##*/}
+          
       - name: Pull Code
-        run: git pull origin ${{ github.ref_name }}
+        run: git pull origin ${{GITHUB_REF##*/}}
 
       - name: Lint Code Base
         uses: github/super-linter@v4
