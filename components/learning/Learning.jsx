@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { Check, Clear } from "@mui/icons-material";
 
-const Learning = ({ activeUnit, wordsCount, exit }) => {
+const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 	// Utils
 	const [answered, setAnswered] = useState([]);
 	const [newWord, setNewWord] = useState({});
@@ -34,6 +34,7 @@ const Learning = ({ activeUnit, wordsCount, exit }) => {
 			.post(`${PATH}learning`, {
 				units: activeUnit,
 				words: answered,
+				language
 			})
 			.then((res) => {
 				if (res.data?.message === "word") {
@@ -55,7 +56,7 @@ const Learning = ({ activeUnit, wordsCount, exit }) => {
 		setShowQuestion(false);
 		setShowOverlay(true);
 		axios
-			.post(`${PATH}learning/correct`, { id: newWord.id, answer })
+			.post(`${PATH}learning/correct`, { id: newWord.id, answer, language })
 			.then((res) => {
 				// user is correct
 				if (res.data.correct) {
@@ -87,7 +88,7 @@ const Learning = ({ activeUnit, wordsCount, exit }) => {
 						sx={{ fontWeight: "medium" }}
 						align="center"
 					>
-						{newWord.cz}
+						{newWord.word}
 					</Typography>
 					<Divider sx={{ mb: 2, mt: 2 }} />
 					<Answers words={answers} selectAnswer={selectAnswer} />

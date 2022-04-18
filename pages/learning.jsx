@@ -12,6 +12,7 @@ const Index = () => {
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [wordsCount, setWordsCount] = useState(0);
 	const [learning, setLearning] = useState(false);
+	const [language, setLanguage] = useState("en"); // language of answers
 
 	useEffect(() => {
 		// get updated units for unitSelect
@@ -27,9 +28,10 @@ const Index = () => {
 	};
 
 	// start game - from LearningIntroduction
-	const startGame = (selectedUnits, count) => {
+	const startGame = (selectedUnits, count, lang) => {
 		setActiveUnit(selectedUnits);
 		setWordsCount(count);
+		setLanguage(lang);
 		setLearning(true);
 	};
 
@@ -43,6 +45,7 @@ const Index = () => {
 				<Learning
 					activeUnit={activeUnit.map((au) => au.id)}
 					wordsCount={wordsCount}
+					language={language}
 					exit={exit}
 				/>
 			)}
