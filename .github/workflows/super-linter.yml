@@ -18,6 +18,12 @@ jobs:
         with:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
+      - name: Install eslint-next-config
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+          cache: 'npm'
+      - run: npm install eslint eslint-config-next
 
       - name: Lint Code Base
         uses: github/super-linter@v4
