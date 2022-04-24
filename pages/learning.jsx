@@ -5,6 +5,7 @@ import { PATH } from "../config";
 import { Stack } from "@mui/material";
 import LearningIntroduction from "../components/learning/LearningIntroduction";
 import Learning from "../components/learning/Learning";
+import Exam from '../components/learning/Exam';
 
 const Index = () => {
 	// utils
@@ -12,6 +13,7 @@ const Index = () => {
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [wordsCount, setWordsCount] = useState(0);
 	const [learning, setLearning] = useState(false);
+	const [exam, setExam] = useState(false);
 	const [language, setLanguage] = useState("en"); // language of answers
 
 	useEffect(() => {
@@ -25,29 +27,41 @@ const Index = () => {
 		setActiveUnit([]);
 		setWordsCount(0);
 		setLearning(false);
+		setExam(false);
 	};
 
 	// start game - from LearningIntroduction
-	const startGame = (selectedUnits, count, lang) => {
+	const startGame = (selectedUnits, count, lang, mode) => {
 		setActiveUnit(selectedUnits);
 		setWordsCount(count);
 		setLanguage(lang);
-		setLearning(true);
+		mode === "learning" ? setLearning(true) : setExam(true);
 	};
 
 	return (
 		<Stack sx={{ maxWidth: 400, width: "100%" }}>
-			{!learning ? (
+			{!(learning || exam) ? (
 				<Stack alignItems="center">
 					<LearningIntroduction startGame={startGame} units={units} />
 				</Stack>
 			) : (
-				<Learning
-					activeUnit={activeUnit.map((au) => au.id)}
-					wordsCount={wordsCount}
-					language={language}
-					exit={exit}
-				/>
+				<>
+					{learning ? (
+						<Learning
+							activeUnit={activeUnit.map((au) => au.id)}
+							wordsCount={wordsCount}
+							language={language}
+							exit={exit}
+						/>
+					) : (
+						<Exam
+							activeUnit={activeUnit.map((au) => au.id)}
+							wordsCount={wordsCount}
+							language={language}
+							exit={exit}
+						/>
+					)}
+				</>
 			)}
 		</Stack>
 	);

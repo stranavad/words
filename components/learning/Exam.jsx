@@ -3,8 +3,8 @@ import axios from "axios";
 import { PATH } from "../../config";
 // UI
 import Answers from "./Answers";
-import Results from "./Results";
 import ProgressBar from "./ProgressBar";
+import ExamResult from "./ExamResult";
 import {
 	Stack,
 	Typography,
@@ -15,21 +15,17 @@ import {
 } from "@mui/material";
 import { Check, Clear } from "@mui/icons-material";
 
-const Learning = ({ activeUnit, wordsCount, exit, language }) => {
+const Exam = ({ activeUnit, wordsCount, exit, language }) => {
 	// Utils
 	const [answered, setAnswered] = useState([]);
 	const [newWord, setNewWord] = useState({});
 	const [answers, setAnswers] = useState([]);
 	// UI
 	const [showQuestion, setShowQuestion] = useState(false);
-	const [showOverlay, setShowOverlay] = useState(true);
 	const [overlay, setOverlay] = useState(<CircularProgress />);
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect(() => getNewWord(), [answered]);
-
-	// get new word and set it, end if no words left
-	const getNewWord = () => {
+	// get new word
+	useEffect(() => {
 		axios
 			.post(`${PATH}learning`, {
 				units: activeUnit,
@@ -38,65 +34,47 @@ const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 			})
 			.then((res) => {
 				if (res.data?.message === "word") {
+					!showQuestion && setShowQuestion(true); // after start
 					setAnswers(res.data.guessWords);
 					setNewWord(res.data.word);
-					setTimeout(() => {
-						setShowOverlay(false);
-						setShowQuestion(true);
-					}, 500);
 				} else {
-					setOverlay(
-						<Results
-							playAgain={playAgain}
-							exit={exit}
-							answered={answered}
-						/>
-					);
+					endExam();
 				}
 			});
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [answered]);
 
 	// send request with answer, show overlay
 	const selectAnswer = (answer) => {
+		setAnswered((ans) => [...ans, { id: newWord.id, answer }]);
+	};
+
+	// check answers and end exam
+	const endExam = () => {
 		setOverlay(<CircularProgress />);
 		setShowQuestion(false);
-		setShowOverlay(true);
 		axios
-			.post(`${PATH}learning/correct`, {
-				id: newWord.id,
-				answer,
+			.post(`${PATH}learning/exam`, {
 				language,
+				answers: answered,
 			})
 			.then((res) => {
-				// user is correct
-				if (res.data.correct) {
-					setOverlay(<Check color="success" sx={{ fontSize: 60 }} />);
-					setAnswered((a) => [
-						...a,
-						{
-							...newWord,
-							answer,
-						},
-					]);
-				} else {
-					// user is not correct
-					setOverlay(<Clear color="error" sx={{ fontSize: 60 }} />);
-					setNewWord((word) => ({
-						...word,
-						mistakes: word.mistakes + 1,
-					}));
-					setTimeout(() => {
-						setShowOverlay(false);
-						setShowQuestion(true);
-					}, 700);
-				}
+				setOverlay(
+					<ExamResult
+						answers={res.data.answers}
+						percentage={res.data.percentage}
+						playAgain={playAgain}
+						exit={exit}
+					/>
+				);
 			});
 	};
 
 	const playAgain = () => {
 		setAnswered([]);
 		setNewWord({});
-		setOverlay(<CircularProgress/>);
+		setShowQuestion(false);
+		setOverlay(<CircularProgress />);
 	};
 
 	return (
@@ -118,11 +96,10 @@ const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 					/>
 				</Stack>
 			</Fade>
-			<Slide in={showOverlay} direction="up">
+			<Slide in={!showQuestion} direction="up">
 				<Stack alignItems="center">{overlay}</Stack>
 			</Slide>
 		</>
 	);
 };
-
-export default Learning;
+export default Exam;
