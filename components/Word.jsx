@@ -21,7 +21,6 @@ import {
 } from "@mui/icons-material";
 import WordForm from "./WordForm";
 import axios from "axios";
-2;
 import { PATH } from "../config";
 
 const Word = ({ word, showGlobal, speak, primary, units, loadData, alert }) => {
