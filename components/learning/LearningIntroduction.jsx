@@ -21,8 +21,8 @@ const LearningIntroduction = ({ startGame, units }) => {
 			.then((res) => setWordCount(res.data.count));
 	}, [activeUnit]);
 
-	const start = () => {
-		startGame(activeUnit, wordCount, language);
+	const start = (mode) => {
+		startGame(activeUnit, wordCount, language, mode);
 	};
 
 	return (
@@ -44,12 +44,19 @@ const LearningIntroduction = ({ startGame, units }) => {
 				{activeUnit.length > 0 ? wordCount : 0}
 			</Typography>
 			<Typography sx={{ mb: 4 }}>words</Typography>
-			<Typography variant='caption'>Language you want to practice</Typography>
+			<Typography variant="caption">
+				Language you want to practice
+			</Typography>
 			<TogglePrimary primary={language} setPrimary={setLanguage} />
 			{activeUnit.length > 0 && (
-				<Button variant="contained" onClick={start} sx={{mt: 4}}>
-					Start learning!
-				</Button>
+				<>
+					<Button variant="contained" onClick={() => start('learning')} sx={{ mt: 4 }}>
+						Learning!
+					</Button>
+					<Button variant="contained" onClick={() => start('exam')} sx={{ mt: 1 }}>
+						Exam!
+					</Button>
+				</>
 			)}
 		</>
 	);
