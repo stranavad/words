@@ -81,7 +81,10 @@ const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 				} else {
 					// user is not correct
 					setOverlay(<Clear color="error" sx={{ fontSize: 60 }} />);
-					setNewWord((word) => ({...word, mistakes: word.mistakes + 1}))
+					setNewWord((word) => ({
+						...word,
+						mistakes: word.mistakes + 1,
+					}));
 					setTimeout(() => {
 						setShowOverlay(false);
 						setShowQuestion(true);

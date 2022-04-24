@@ -58,7 +58,9 @@ export default function Index({ alert, wordsProp, unitsProp }) {
 	const { speak, speaking, cancel, voices } = useSpeechSynthesis();
 	const speakWord = (text) => {
 		speaking && cancel();
-		const voice = voices.find((vc) => vc.lang === "en-GB") || voices.find((vc) => vc.lang === "en_GB");
+		const voice =
+			voices.find((vc) => vc.lang === "en-GB") ||
+			voices.find((vc) => vc.lang === "en_GB");
 		speak({ text, voice: voice || voices[0] });
 	};
 

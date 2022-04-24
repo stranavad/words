@@ -12,7 +12,7 @@ const Index = () => {
 	const [activeUnit, setActiveUnit] = useState([]);
 	const [wordsCount, setWordsCount] = useState(0);
 	const [learning, setLearning] = useState(false);
-    const [language, setLanguage] = useState("en"); // language of answers
+	const [language, setLanguage] = useState("en"); // language of answers
 
 	useEffect(() => {
 		// get updated units for unitSelect

@@ -9,7 +9,7 @@ import {
 	Button,
 	Stack,
 	Divider,
-	Box
+	Box,
 } from "@mui/material";
 import {
 	Edit,
@@ -20,18 +20,11 @@ import {
 	Close,
 } from "@mui/icons-material";
 import WordForm from "./WordForm";
-import axios from 'axios';2
+import axios from "axios";
+2;
 import { PATH } from "../config";
 
-const Word = ({
-	word,
-	showGlobal,
-	speak,
-	primary,
-	units,
-	loadData,
-	alert,
-}) => {
+const Word = ({ word, showGlobal, speak, primary, units, loadData, alert }) => {
 	const [show, setShow] = useState(true);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [showEdit, setShowEdit] = useState(false);
@@ -147,7 +140,8 @@ const Word = ({
 					sx={{
 						cursor: "pointer",
 						borderLeftWidth: "2px",
-						borderLeftColor: units.find((u) => u.id === word.unit).color,
+						borderLeftColor: units.find((u) => u.id === word.unit)
+							.color,
 						borderLeftStyle: "solid",
 						paddingLeft: "5px",
 					}}
