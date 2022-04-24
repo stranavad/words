@@ -5,7 +5,7 @@ const ExamResult = ({ answers, percentage, playAgain, exit }) => {
 		<>
 			<Typography variant="h5">Well done</Typography>
 			<Typography>
-				Your success rate is
+				Your success rate is{" "}
 				{percentage}%
 			</Typography>
 			<Button variant="contained" onClick={playAgain} sx={{ mb: 2 }}>
