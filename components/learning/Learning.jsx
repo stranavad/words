@@ -4,7 +4,7 @@ import { PATH } from "../../config";
 // UI
 import Answers from "./Answers";
 import Results from "./Results";
-import ProgressBar from './ProgressBar';
+import ProgressBar from "./ProgressBar";
 import {
 	Stack,
 	Typography,
@@ -33,8 +33,8 @@ const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 		axios
 			.post(`${PATH}learning`, {
 				units: activeUnit,
-				words: answered,
-				language
+				words: answered.map((aw) => aw.id),
+				language,
 			})
 			.then((res) => {
 				if (res.data?.message === "word") {
@@ -45,7 +45,13 @@ const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 						setShowQuestion(true);
 					}, 500);
 				} else {
-					setOverlay(<Results playAgain={playAgain} exit={exit} />);
+					setOverlay(
+						<Results
+							playAgain={playAgain}
+							exit={exit}
+							answered={answered}
+						/>
+					);
 				}
 			});
 	};
@@ -56,15 +62,26 @@ const Learning = ({ activeUnit, wordsCount, exit, language }) => {
 		setShowQuestion(false);
 		setShowOverlay(true);
 		axios
-			.post(`${PATH}learning/correct`, { id: newWord.id, answer, language })
+			.post(`${PATH}learning/correct`, {
+				id: newWord.id,
+				answer,
+				language,
+			})
 			.then((res) => {
 				// user is correct
 				if (res.data.correct) {
 					setOverlay(<Check color="success" sx={{ fontSize: 60 }} />);
-					setAnswered((a) => [...a, newWord.id]);
+					setAnswered((a) => [
+						...a,
+						{
+							...newWord,
+							answer,
+						},
+					]);
 				} else {
 					// user is not correct
 					setOverlay(<Clear color="error" sx={{ fontSize: 60 }} />);
+					setNewWord((word) => ({...word, mistakes: word.mistakes + 1}))
 					setTimeout(() => {
 						setShowOverlay(false);
 						setShowQuestion(true);
