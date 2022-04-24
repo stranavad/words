@@ -1,11 +1,13 @@
 {
 	"name": "nikodem-frontend",
 	"version": "0.1.0",
-	"private": true,	"scripts": {
+	"private": true,
+	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"cypress": "cypress open"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.8.2",
@@ -22,6 +24,7 @@
 		"react-speech-kit": "^3.0.1"
 	},
 	"devDependencies": {
+		"cypress": "^9.5.4",
 		"eslint": "^8.11.0",
 		"eslint-config-next": "12.1.0"
 	}
