@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 14.x
           cache: 'npm'
-      - run: npm install eslint eslint-next-config
+      - run: npm install eslint eslint-config-next
 
       - name: Lint Code Base
         uses: github/super-linter@v4
