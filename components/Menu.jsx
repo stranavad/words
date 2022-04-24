@@ -12,7 +12,7 @@ const Menu = () => {
 						component="div"
 						sx={{ flexGrow: 1 }}
 					>
-						Lengeda Jezek
+						Legenda Jezek
 					</Typography>
 					<Link href="/learning" passHref>
 						<Button>
