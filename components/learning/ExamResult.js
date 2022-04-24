@@ -1,6 +1,6 @@
 import { Typography, Button } from "@mui/material";
 
-const ExamResult = ({ answers, percentage, playAgain, exit }) => {
+const ExamResult = ({ percentage, playAgain, exit }) => {
 	return (
 		<>
 			<Typography variant="h5">Well done</Typography>
